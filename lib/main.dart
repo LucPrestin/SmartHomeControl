@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:smart_home_control/view/about_page.dart';
-import 'package:smart_home_control/view/smart_hub_list_page.dart';
+import 'package:smart_home_control/views/about_page.dart';
+import 'package:smart_home_control/views/smart_hub_list_page.dart';
 
-import 'view/light_list_page.dart';
+import 'views/light_list_page.dart';
 import 'routes/routes.dart';
 
 void main() {
