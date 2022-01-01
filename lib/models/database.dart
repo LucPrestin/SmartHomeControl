@@ -1,4 +1,4 @@
-import 'package:smart_home_control/models/lightStrip.dart';
+import 'package:smart_home_control/models/light_strip.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
