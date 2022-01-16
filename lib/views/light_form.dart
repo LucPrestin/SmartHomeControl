@@ -44,6 +44,7 @@ class _LightFormState extends State<LightForm> {
 
   TextFormField nameField() {
     return TextFormField(
+      key: const Key('field name'),
       decoration: const InputDecoration(
           hintText: 'Where is the light strip located?', labelText: 'Name *'),
       initialValue: name,
@@ -58,6 +59,7 @@ class _LightFormState extends State<LightForm> {
 
   ColorPicker colorPicker() {
     return ColorPicker(
+      key: const Key('field color'),
       onColorChanged: (Color value) => setState(() => color = value),
       pickerColor: color,
     );
