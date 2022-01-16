@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class LightStrip {
-  int id;
+  int? id;
   Color color;
   String name;
   bool isOn;
 
   LightStrip(
-      {required this.id,
+      {this.id,
       required this.name,
       this.color = Colors.black,
       this.isOn = false});
