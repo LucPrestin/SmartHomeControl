@@ -7,20 +7,28 @@ import 'package:smart_home_control/views/light_form.dart';
 
 void main() {
   group('child components', () {
+    Future pumpLightForm(WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(
+          title: 'Smart Home Control',
+          home: Scaffold(
+            body: LightForm(),
+          )));
+    }
+
     testWidgets('has a TextFormField for the name',
         (WidgetTester tester) async {
-      await tester.pumpWidget(const LightForm());
+      await pumpLightForm(tester);
 
       expect(find.byType(TextFormField), findsOneWidget);
     });
     testWidgets('has a ColorPicker for the light color',
         (WidgetTester tester) async {
-      await tester.pumpWidget(const LightForm());
+      await pumpLightForm(tester);
 
       expect(find.byType(ColorPicker), findsOneWidget);
     });
     testWidgets('has a Button to submit', (WidgetTester tester) async {
-      await tester.pumpWidget(const LightForm());
+      await pumpLightForm(tester);
 
       expect(find.byType(ElevatedButton), findsOneWidget);
       expect(find.text('Submit'), findsOneWidget);
