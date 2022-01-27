@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_home_control/models/lightStrip.dart';
+import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/views/light_form.dart';
 
 class LightEditPage extends StatefulWidget {

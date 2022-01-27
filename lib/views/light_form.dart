@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:smart_home_control/models/database.dart';
-import 'package:smart_home_control/models/lightStrip.dart';
+import 'package:smart_home_control/models/light_strip.dart';
 
 class LightForm extends StatefulWidget {
   const LightForm({Key? key, this.strip}) : super(key: key);
@@ -17,6 +17,7 @@ class _LightFormState extends State<LightForm> {
   late bool isEditForm;
 
   late String name;
+  late String mqttId;
   late Color color;
   late int? id;
   late bool isOn;
@@ -26,6 +27,7 @@ class _LightFormState extends State<LightForm> {
     isEditForm = widget.strip == null ? true : false;
 
     name = widget.strip?.name ?? '';
+    mqttId = widget.strip?.name ?? '';
     color = widget.strip?.color ?? Colors.black;
     id = widget.strip?.id;
     isOn = widget.strip?.isOn ?? false;
@@ -35,11 +37,13 @@ class _LightFormState extends State<LightForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        key: _formKey,
-        child: Column(
-          children: [nameField(), colorPicker(), submitButton()],
-        ));
+    return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+            key: _formKey,
+            child: Column(
+              children: [nameField(), idField(), colorPicker(), submitButton()],
+            )));
   }
 
   TextFormField nameField() {
@@ -57,8 +61,24 @@ class _LightFormState extends State<LightForm> {
     );
   }
 
-  ColorPicker colorPicker() {
-    return ColorPicker(
+  TextFormField idField() {
+    return TextFormField(
+      key: const Key('field mqttId'),
+      decoration: const InputDecoration(
+          hintText: 'What is the mqtt id of the strip?',
+          labelText: 'MQTT id *'),
+      initialValue: mqttId,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter an ID';
+        }
+        return null;
+      },
+    );
+  }
+
+  SlidePicker colorPicker() {
+    return SlidePicker(
       key: const Key('field color'),
       onColorChanged: (Color value) => setState(() => color = value),
       pickerColor: color,
@@ -68,17 +88,20 @@ class _LightFormState extends State<LightForm> {
   ElevatedButton submitButton() {
     return ElevatedButton(
         onPressed: () {
-          if (_formKey.currentState!.validate()) {
-            var result =
-                LightStrip(id: id, name: name, color: color, isOn: isOn);
-            if (isEditForm) {
-              DatabaseHelper.instance.updateLightStrip(result);
-            } else {
-              DatabaseHelper.instance.insertLightStrip(result);
-            }
-            Navigator.pop(context);
-          }
+          checkAndSubmitForm();
         },
         child: const Text('Submit'));
+  }
+
+  void checkAndSubmitForm() {
+    if (_formKey.currentState!.validate()) {
+      var result = LightStrip(id: id, name: name, color: color, isOn: isOn);
+      if (isEditForm) {
+        DatabaseHelper.instance.updateLightStrip(result);
+      } else {
+        DatabaseHelper.instance.insertLightStrip(result);
+      }
+      Navigator.pop(context);
+    }
   }
 }
