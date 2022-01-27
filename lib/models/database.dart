@@ -1,4 +1,4 @@
-import 'package:smart_home_control/models/lightStrip.dart';
+import 'package:smart_home_control/models/light_strip.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -24,7 +24,7 @@ class DatabaseHelper {
   _onCreateDatabase(Database db, int version) async {
     // create light strip table
     await db.execute(
-        'CREATE TABLE $_tableNameLightStrip (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, color INTEGER, isOn INTEGER)');
+        'CREATE TABLE $_tableNameLightStrip (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, mqttId TEXT, color INTEGER, isOn INTEGER)');
   }
 
   insertLightStrip(LightStrip lightStrip) async {
