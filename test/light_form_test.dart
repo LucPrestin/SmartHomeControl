@@ -27,12 +27,6 @@ void main() {
 
       expect(find.byType(ColorPicker), findsOneWidget);
     });
-    testWidgets('has a Button to submit', (WidgetTester tester) async {
-      await pumpLightForm(tester);
-
-      expect(find.byType(ElevatedButton), findsOneWidget);
-      expect(find.text('Submit'), findsOneWidget);
-    });
   });
 
   group('behavior', () {

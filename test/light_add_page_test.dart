@@ -25,5 +25,12 @@ void main() {
 
       expect(find.byType(LightForm), findsOneWidget);
     });
+
+    testWidgets('has a FloatingActionButton to submit',
+        (WidgetTester tester) async {
+      await navigateToLightAddPage(tester);
+
+      expect(find.byType(FloatingActionButton), findsOneWidget);
+    });
   });
 }

@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'dart:async';
+
 import 'package:smart_home_control/models/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 
 class LightForm extends StatefulWidget {
-  const LightForm({Key? key, this.strip}) : super(key: key);
+  const LightForm({Key? key, this.strip, this.submitTrigger}) : super(key: key);
 
   final LightStrip? strip;
+  final Stream? submitTrigger;
 
   @override
   State<StatefulWidget> createState() => _LightFormState();
 }
 
 class _LightFormState extends State<LightForm> {
+  late StreamSubscription streamSubscription;
+
   final _formKey = GlobalKey<FormState>();
   late bool isEditForm;
 
@@ -32,7 +37,26 @@ class _LightFormState extends State<LightForm> {
     id = widget.strip?.id;
     isOn = widget.strip?.isOn ?? false;
 
+    streamSubscription = widget.submitTrigger!.listen((_) => checkAndSubmit());
+
     super.initState();
+  }
+
+  @override
+  didUpdateWidget(LightForm old) {
+    super.didUpdateWidget(old);
+    // in case the stream instance changed, subscribe to the new one
+    if (widget.submitTrigger != old.submitTrigger) {
+      streamSubscription.cancel();
+      streamSubscription =
+          widget.submitTrigger!.listen((_) => checkAndSubmit());
+    }
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    streamSubscription.cancel();
   }
 
   @override
@@ -104,7 +128,7 @@ class _LightFormState extends State<LightForm> {
     );
   }
 
-  void checkAndSubmitForm() {
+  void checkAndSubmit() {
     if (_formKey.currentState!.validate()) {
       var result = LightStrip(id: id, name: name, color: color, isOn: isOn);
       if (isEditForm) {
