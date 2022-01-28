@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:smart_home_control/views/pages/light_add_page.dart';
+import 'package:smart_home_control/views/pages/light_edit_page.dart';
 
 import 'package:smart_home_control/views/pages/about_page.dart';
 import 'package:smart_home_control/views/pages/light_list_page.dart';
@@ -37,8 +39,10 @@ class SmartHomeControlApp extends StatelessWidget {
         home: const LightListPage(),
         routes: {
           Routes.lights: (context) => const LightListPage(),
+          Routes.lightsNew: (context) => const LightAddPage(),
+          Routes.lightsEdit: (context) => const LightEditPage(),
           Routes.smartHubs: (context) => const SmartHubListPage(),
-          Routes.about: (coutext) => const AboutPage()
+          Routes.about: (context) => const AboutPage(),
         });
   }
 }

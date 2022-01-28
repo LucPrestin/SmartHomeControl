@@ -24,7 +24,7 @@ class DatabaseHelper {
   _onCreateDatabase(Database db, int version) async {
     // create light strip table
     await db.execute(
-        'CREATE TABLE $_tableNameLightStrip (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, color INTEGER, isOn INTEGER)');
+        'CREATE TABLE $_tableNameLightStrip (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, mqttId TEXT, color INTEGER, isOn INTEGER)');
   }
 
   insertLightStrip(LightStrip lightStrip) async {

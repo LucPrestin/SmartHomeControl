@@ -5,7 +5,7 @@ import 'package:smart_home_control/models/light_strip.dart';
 import 'factories.dart';
 
 void main() {
-  group("DatabaseHelper", () async {
+  group("DatabaseHelper", () {
     test('Has no light strips at the beginning', () async {
       List<LightStrip> allStrips =
           await DatabaseHelper.instance.getAllLightStrips();

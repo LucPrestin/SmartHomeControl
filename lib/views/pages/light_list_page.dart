@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../components/navigation_drawer.dart';
+import 'package:smart_home_control/routes/routes.dart';
+import 'package:smart_home_control/views/components/navigation_drawer.dart';
 
 class LightListPage extends StatefulWidget {
   const LightListPage({Key? key}) : super(key: key);
@@ -20,6 +21,10 @@ class _LightListPageState extends State<LightListPage> {
           child: Text(
               'Here goes a list of smart lights and a fab to add a new one')),
       drawer: const NavigationDrawer(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, Routes.lightsNew),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
