@@ -24,12 +24,14 @@ class NavigationDrawer extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               ListTile(
+                key: const Key('to LightListPage'),
                 leading: const Icon(Icons.lightbulb),
                 title: const Text('Lights'),
                 onTap: () =>
                     Navigator.pushReplacementNamed(context, Routes.lights),
               ),
               ListTile(
+                key: const Key('to SmartHubListPage'),
                 leading: const Icon(Icons.device_hub),
                 title: const Text('Smart Hubs'),
                 onTap: () =>
@@ -37,6 +39,7 @@ class NavigationDrawer extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
+                key: const Key('to AboutPage'),
                 leading: const Icon(Icons.info),
                 title: const Text('About'),
                 onTap: () =>
