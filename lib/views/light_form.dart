@@ -42,31 +42,40 @@ class _LightFormState extends State<LightForm> {
         child: Form(
             key: _formKey,
             child: Column(
-              children: [nameField(), idField(), colorPicker(), submitButton()],
+              children: [
+                nameField(),
+                spacing(),
+                idField(),
+                spacing(),
+                colorPicker(),
+                spacing()
+              ],
             )));
+  }
+
+  SizedBox spacing() {
+    return const SizedBox(height: 20);
   }
 
   TextFormField nameField() {
     return TextFormField(
-      key: const Key('field name'),
-      decoration: const InputDecoration(
-          hintText: 'Where is the light strip located?', labelText: 'Name *'),
-      initialValue: name,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter a name';
-        }
-        return null;
-      },
-    );
+        key: const Key('field name'),
+        initialValue: name,
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter a name';
+          }
+          return null;
+        },
+        decoration: const InputDecoration(
+            hintText: 'Where is the light strip located?',
+            labelText: 'Name *',
+            enabledBorder: OutlineInputBorder()));
   }
 
   TextFormField idField() {
     return TextFormField(
       key: const Key('field mqttId'),
-      decoration: const InputDecoration(
-          hintText: 'What is the mqtt id of the strip?',
-          labelText: 'MQTT id *'),
       initialValue: mqttId,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -74,23 +83,25 @@ class _LightFormState extends State<LightForm> {
         }
         return null;
       },
+      decoration: const InputDecoration(
+          hintText: 'What is the mqtt id of the strip?',
+          labelText: 'MQTT id *',
+          enabledBorder: OutlineInputBorder()),
     );
   }
 
-  SlidePicker colorPicker() {
-    return SlidePicker(
-      key: const Key('field color'),
-      onColorChanged: (Color value) => setState(() => color = value),
-      pickerColor: color,
+  Container colorPicker() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+      child: SlidePicker(
+        key: const Key('field color'),
+        onColorChanged: (Color value) => setState(() => color = value),
+        pickerColor: color,
+      ),
+      decoration: BoxDecoration(
+          border: Border.all(), borderRadius: BorderRadius.circular(4)),
     );
-  }
-
-  ElevatedButton submitButton() {
-    return ElevatedButton(
-        onPressed: () {
-          checkAndSubmitForm();
-        },
-        child: const Text('Submit'));
   }
 
   void checkAndSubmitForm() {

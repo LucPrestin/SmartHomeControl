@@ -34,44 +34,55 @@ void main() {
       expect(find.text('Submit'), findsOneWidget);
     });
   });
-  group('add mode', () {
-    Future navigateToLightAddPage(WidgetTester tester) async {
-      await tester.pumpWidget(const SmartHomeControlApp());
-      await tester.pumpAndSettle();
 
-      await tester.dragFrom(
-          tester.getTopLeft(find.byType(MaterialApp)), const Offset(300, 0));
-      await tester.pumpAndSettle();
+  group('behavior', () {
+    group('add mode', () {
+      Future navigateToLightAddPage(WidgetTester tester) async {
+        await tester.pumpWidget(const SmartHomeControlApp());
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(Icons.lightbulb));
-      await tester.pumpAndSettle();
+        await tester.dragFrom(
+            tester.getTopLeft(find.byType(MaterialApp)), const Offset(300, 0));
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(Icons.add));
-      await tester.pumpAndSettle();
-    }
+        await tester.tap(find.byIcon(Icons.lightbulb));
+        await tester.pumpAndSettle();
 
-    testWidgets(
-        'pressing the submit button adds a new light strip to the database',
-        (WidgetTester tester) async {
-      // await navigateToLightAddPage(tester);
+        await tester.tap(find.byIcon(Icons.add));
+        await tester.pumpAndSettle();
+      }
 
-      // var helper = DatabaseHelper.instance;
-      // TODO: the next call does not terminate. Find out why
-      // var allStrips = await helper.getAllLightStrips();
-      // expect(allStrips.isEmpty, true);
+      testWidgets(
+          'pressing the submit button adds a new light strip to the database',
+          (WidgetTester tester) async {
+        // await navigateToLightAddPage(tester);
 
-      // await tester.enterText(find.byKey(const Key('field name')), 'test');
-      // await tester.pumpAndSettle();
+        // var helper = DatabaseHelper.instance;
+        // TODO: the next call does not terminate. Find out why
+        // var allStrips = await helper.getAllLightStrips();
+        // expect(allStrips.isEmpty, true);
 
-      // await tester.tap(find.text('Submit'));
-      // await tester.pumpAndSettle();
+        // await tester.enterText(find.byKey(const Key('field name')), 'test');
+        // await tester.pumpAndSettle();
 
-      // allStrips = await helper.getAllLightStrips();
-      // expect(allStrips.length, 1);
+        // await tester.tap(find.text('Submit'));
+        // await tester.pumpAndSettle();
+
+        // allStrips = await helper.getAllLightStrips();
+        // expect(allStrips.length, 1);
+      });
     });
-  });
 
-  group('edit mode', () {
-    // TODO
+    group('edit mode', () {
+      Future navigateToLightEditPage(WidgetTester tester) async {
+        // TODO
+      }
+
+      testWidgets(
+          'pressing the submit button updates the current light strip in the database',
+          (WidgetTester tester) async {
+        // TODO
+      });
+    });
   });
 }
