@@ -51,8 +51,13 @@ class _LightListItemState extends State<LightListItem> {
 
   GestureDetector colorBox() {
     return GestureDetector(
-        onTap: () {
-          showColorPickerDialog();
+        onTap: () async {
+          var result = await showColorPickerDialog();
+          if (result != null) {
+            widget.strip.color = result;
+            await DatabaseHelper.instance.updateLightStrip(widget.strip);
+            setState(() {});
+          }
         },
         child: SizedBox(
             width: 40,
@@ -85,7 +90,7 @@ class _LightListItemState extends State<LightListItem> {
     );
   }
 
-  void showColorPickerDialog() => showDialog(
+  Future<Color?> showColorPickerDialog() => showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -101,16 +106,12 @@ class _LightListItemState extends State<LightListItem> {
           actions: [
             TextButton(
                 onPressed: () {
-                  setState(() => stripColor = widget.strip.color);
                   Navigator.pop(context);
                 },
                 child: const Text('Cancel')),
             TextButton(
                 onPressed: () async {
-                  widget.strip.color = stripColor;
-                  await DatabaseHelper.instance.updateLightStrip(widget.strip);
-                  setState(() {});
-                  Navigator.pop(context);
+                  Navigator.pop(context, stripColor);
                 },
                 child: const Text('Confirm'))
           ],
