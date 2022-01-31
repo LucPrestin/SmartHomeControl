@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_home_control/models/light_strip.dart';
+import 'package:smart_home_control/routes/routes.dart';
 
 class LightListItem extends StatefulWidget {
   final LightStrip strip;
@@ -57,7 +58,9 @@ class _LightListItemState extends State<LightListItem> {
   IconButton editButton() {
     return IconButton(
       icon: const Icon(Icons.edit),
-      onPressed: () {},
+      onPressed: () => Navigator.pushNamed(context, Routes.lightsEdit,
+              arguments: widget.strip)
+          .then((_) => setState(() {})),
       iconSize: 28.0,
       color: const Color(0xFF9d9d9d),
     );
