@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_home_control/models/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/routes/routes.dart';
 
@@ -52,7 +53,13 @@ class _LightListItemState extends State<LightListItem> {
   }
 
   Switch onOffToggle() {
-    return Switch(onChanged: (value) {}, value: widget.strip.isOn);
+    return Switch(
+        onChanged: (value) async {
+          widget.strip.isOn = value;
+          await DatabaseHelper.instance.updateLightStrip(widget.strip);
+          setState(() {});
+        },
+        value: widget.strip.isOn);
   }
 
   IconButton editButton() {
