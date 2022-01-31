@@ -55,7 +55,8 @@ class _LightListPageState extends State<LightListPage> {
         ),
         drawer: const NavigationDrawer(),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.pushNamed(context, Routes.lightsNew),
+          onPressed: () => Navigator.pushNamed(context, Routes.lightsNew)
+              .then((_) => setState(() {})),
           child: const Icon(Icons.add),
         ));
   }
