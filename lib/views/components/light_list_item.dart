@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:smart_home_control/models/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/routes/routes.dart';
@@ -13,6 +14,15 @@ class LightListItem extends StatefulWidget {
 }
 
 class _LightListItemState extends State<LightListItem> {
+  late Color stripColor;
+
+  @override
+  void initState() {
+    super.initState();
+
+    stripColor = widget.strip.color;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -41,7 +51,9 @@ class _LightListItemState extends State<LightListItem> {
 
   GestureDetector colorBox() {
     return GestureDetector(
-        onTap: () {},
+        onTap: () {
+          showColorPickerDialog();
+        },
         child: SizedBox(
             width: 40,
             height: 40,
@@ -72,4 +84,36 @@ class _LightListItemState extends State<LightListItem> {
       color: const Color(0xFF9d9d9d),
     );
   }
+
+  void showColorPickerDialog() => showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color'),
+          content: SingleChildScrollView(
+              child: SlidePicker(
+            pickerColor: widget.strip.color,
+            onColorChanged: (newColor) {
+              setState(() => stripColor = newColor);
+            },
+          )),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  setState(() => stripColor = widget.strip.color);
+                  Navigator.pop(context);
+                },
+                child: const Text('Cancel')),
+            TextButton(
+                onPressed: () async {
+                  widget.strip.color = stripColor;
+                  await DatabaseHelper.instance.updateLightStrip(widget.strip);
+                  setState(() {});
+                  Navigator.pop(context);
+                },
+                child: const Text('Confirm'))
+          ],
+        );
+      });
 }
