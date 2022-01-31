@@ -29,7 +29,7 @@ class _LightFormState extends State<LightForm> {
 
   @override
   void initState() {
-    isEditForm = widget.strip == null ? true : false;
+    isEditForm = widget.strip == null ? false : true;
 
     name = widget.strip?.name ?? '';
     mqttId = widget.strip?.name ?? '';
@@ -70,7 +70,7 @@ class _LightFormState extends State<LightForm> {
               children: [
                 nameField(),
                 spacing(),
-                idField(),
+                mqttIdField(),
                 spacing(),
                 colorPicker(),
                 spacing()
@@ -85,6 +85,7 @@ class _LightFormState extends State<LightForm> {
   TextFormField nameField() {
     return TextFormField(
         key: const Key('field name'),
+        onChanged: (String value) => setState(() => name = value),
         initialValue: name,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -98,9 +99,10 @@ class _LightFormState extends State<LightForm> {
             enabledBorder: OutlineInputBorder()));
   }
 
-  TextFormField idField() {
+  TextFormField mqttIdField() {
     return TextFormField(
       key: const Key('field mqttId'),
+      onChanged: (String value) => setState(() => mqttId = value),
       initialValue: mqttId,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -129,13 +131,14 @@ class _LightFormState extends State<LightForm> {
     );
   }
 
-  void checkAndSubmit() {
+  void checkAndSubmit() async {
     if (_formKey.currentState!.validate()) {
-      var result = LightStrip(id: id, name: name, color: color, isOn: isOn);
+      var result = LightStrip(
+          id: id, name: name, mqttId: mqttId, color: color, isOn: isOn);
       if (isEditForm) {
-        DatabaseHelper.instance.updateLightStrip(result);
+        await DatabaseHelper.instance.updateLightStrip(result);
       } else {
-        DatabaseHelper.instance.insertLightStrip(result);
+        await DatabaseHelper.instance.insertLightStrip(result);
       }
       Navigator.pop(context);
     }
