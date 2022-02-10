@@ -2,7 +2,7 @@
 name: User Story
 about: A normal user story as feature request.
 title: ''
-labels: ''
+labels: enhancement
 assignees: ''
 
 ---
