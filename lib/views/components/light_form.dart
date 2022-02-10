@@ -32,7 +32,7 @@ class _LightFormState extends State<LightForm> {
     isEditForm = widget.strip == null ? false : true;
 
     name = widget.strip?.name ?? '';
-    mqttId = widget.strip?.name ?? '';
+    mqttId = widget.strip?.mqttId ?? '';
     color = widget.strip?.color ?? Colors.black;
     id = widget.strip?.id;
     isOn = widget.strip?.isOn ?? false;
@@ -133,12 +133,14 @@ class _LightFormState extends State<LightForm> {
 
   void checkAndSubmit() async {
     if (_formKey.currentState!.validate()) {
-      var result = LightStrip(
-          id: id, name: name, mqttId: mqttId, color: color, isOn: isOn);
       if (isEditForm) {
-        await DatabaseHelper.instance.updateLightStrip(result);
+        widget.strip!.color = color;
+        widget.strip!.name = name;
+        widget.strip!.mqttId = mqttId;
+        await DatabaseHelper.instance.updateLightStrip(widget.strip!);
       } else {
-        await DatabaseHelper.instance.insertLightStrip(result);
+        await DatabaseHelper.instance.insertLightStrip(LightStrip(
+            id: id, name: name, mqttId: mqttId, color: color, isOn: isOn));
       }
       Navigator.pop(context);
     }
