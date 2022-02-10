@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'dart:async';
 
-import 'package:smart_home_control/views/light_form.dart';
+import 'package:smart_home_control/views/components/light_form.dart';
 
 class LightAddPage extends StatefulWidget {
   const LightAddPage({Key? key}) : super(key: key);

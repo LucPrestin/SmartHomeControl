@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'navigation_drawer.dart';
+import 'package:smart_home_control/views/components/navigation_drawer.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({Key? key}) : super(key: key);

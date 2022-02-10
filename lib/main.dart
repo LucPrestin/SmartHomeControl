@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:smart_home_control/views/about_page.dart';
-import 'package:smart_home_control/views/light_add_page.dart';
-import 'package:smart_home_control/views/light_edit_page.dart';
-import 'package:smart_home_control/views/smart_hub_list_page.dart';
+import 'package:smart_home_control/views/pages/light_add_page.dart';
+import 'package:smart_home_control/views/pages/light_edit_page.dart';
 
-import 'views/light_list_page.dart';
+import 'package:smart_home_control/views/pages/about_page.dart';
+import 'package:smart_home_control/views/pages/light_list_page.dart';
+import 'package:smart_home_control/views/pages/smart_hub_list_page.dart';
+
 import 'routes/routes.dart';
 
 void main() {

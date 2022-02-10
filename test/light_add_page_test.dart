@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_home_control/main.dart';
-import 'package:smart_home_control/views/light_form.dart';
+import 'package:smart_home_control/views/components/light_form.dart';
 
 void main() {
   Future navigateToLightAddPage(WidgetTester tester) async {

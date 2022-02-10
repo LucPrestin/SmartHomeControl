@@ -16,7 +16,7 @@ class LightForm extends StatefulWidget {
 }
 
 class _LightFormState extends State<LightForm> {
-  late StreamSubscription streamSubscription;
+  late StreamSubscription? streamSubscription;
 
   final _formKey = GlobalKey<FormState>();
   late bool isEditForm;
@@ -29,15 +29,15 @@ class _LightFormState extends State<LightForm> {
 
   @override
   void initState() {
-    isEditForm = widget.strip == null ? true : false;
+    isEditForm = widget.strip == null ? false : true;
 
     name = widget.strip?.name ?? '';
-    mqttId = widget.strip?.name ?? '';
+    mqttId = widget.strip?.mqttId ?? '';
     color = widget.strip?.color ?? Colors.black;
     id = widget.strip?.id;
     isOn = widget.strip?.isOn ?? false;
 
-    streamSubscription = widget.submitTrigger!.listen((_) => checkAndSubmit());
+    streamSubscription = widget.submitTrigger?.listen((_) => checkAndSubmit());
 
     super.initState();
   }
@@ -45,18 +45,19 @@ class _LightFormState extends State<LightForm> {
   @override
   didUpdateWidget(LightForm old) {
     super.didUpdateWidget(old);
-    // in case the stream instance changed, subscribe to the new one
+
     if (widget.submitTrigger != old.submitTrigger) {
-      streamSubscription.cancel();
+      streamSubscription?.cancel();
       streamSubscription =
-          widget.submitTrigger!.listen((_) => checkAndSubmit());
+          widget.submitTrigger?.listen((_) => checkAndSubmit());
     }
   }
 
   @override
   dispose() {
     super.dispose();
-    streamSubscription.cancel();
+
+    streamSubscription?.cancel();
   }
 
   @override
@@ -69,7 +70,7 @@ class _LightFormState extends State<LightForm> {
               children: [
                 nameField(),
                 spacing(),
-                idField(),
+                mqttIdField(),
                 spacing(),
                 colorPicker(),
                 spacing()
@@ -84,6 +85,7 @@ class _LightFormState extends State<LightForm> {
   TextFormField nameField() {
     return TextFormField(
         key: const Key('field name'),
+        onChanged: (String value) => setState(() => name = value),
         initialValue: name,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -97,9 +99,10 @@ class _LightFormState extends State<LightForm> {
             enabledBorder: OutlineInputBorder()));
   }
 
-  TextFormField idField() {
+  TextFormField mqttIdField() {
     return TextFormField(
       key: const Key('field mqttId'),
+      onChanged: (String value) => setState(() => mqttId = value),
       initialValue: mqttId,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -128,13 +131,16 @@ class _LightFormState extends State<LightForm> {
     );
   }
 
-  void checkAndSubmit() {
+  void checkAndSubmit() async {
     if (_formKey.currentState!.validate()) {
-      var result = LightStrip(id: id, name: name, color: color, isOn: isOn);
       if (isEditForm) {
-        DatabaseHelper.instance.updateLightStrip(result);
+        widget.strip!.color = color;
+        widget.strip!.name = name;
+        widget.strip!.mqttId = mqttId;
+        await DatabaseHelper.instance.updateLightStrip(widget.strip!);
       } else {
-        DatabaseHelper.instance.insertLightStrip(result);
+        await DatabaseHelper.instance.insertLightStrip(LightStrip(
+            id: id, name: name, mqttId: mqttId, color: color, isOn: isOn));
       }
       Navigator.pop(context);
     }

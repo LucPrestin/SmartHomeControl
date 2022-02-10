@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../routes/routes.dart';
+import 'package:smart_home_control/routes/routes.dart';
 
 class NavigationDrawer extends StatelessWidget {
   const NavigationDrawer({Key? key}) : super(key: key);

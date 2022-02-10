@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_home_control/main.dart';
-import 'package:smart_home_control/views/about_page.dart';
-import 'package:smart_home_control/views/light_form.dart';
-import 'package:smart_home_control/views/light_list_page.dart';
-import 'package:smart_home_control/views/smart_hub_list_page.dart';
+import 'package:smart_home_control/views/pages/about_page.dart';
+import 'package:smart_home_control/views/components/light_form.dart';
+import 'package:smart_home_control/views/pages/light_list_page.dart';
+import 'package:smart_home_control/views/pages/smart_hub_list_page.dart';
 
 void main() {
   Future openDrawer(WidgetTester tester) async {

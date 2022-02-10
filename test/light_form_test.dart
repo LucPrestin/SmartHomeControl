@@ -3,7 +3,7 @@ import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_home_control/main.dart';
 import 'package:smart_home_control/models/database.dart';
-import 'package:smart_home_control/views/light_form.dart';
+import 'package:smart_home_control/views/components/light_form.dart';
 
 void main() {
   group('child components', () {
@@ -19,13 +19,21 @@ void main() {
         (WidgetTester tester) async {
       await pumpLightForm(tester);
 
-      expect(find.byType(TextFormField), findsOneWidget);
+      expect(find.byKey(const Key('field name')), findsOneWidget);
     });
+
+    testWidgets('has a TextFormField for the mqttId',
+        (WidgetTester tester) async {
+      await pumpLightForm(tester);
+
+      expect(find.byKey(const Key('field mqttId')), findsOneWidget);
+    });
+
     testWidgets('has a ColorPicker for the light color',
         (WidgetTester tester) async {
       await pumpLightForm(tester);
 
-      expect(find.byType(ColorPicker), findsOneWidget);
+      expect(find.byType(SlidePicker), findsOneWidget);
     });
   });
 
