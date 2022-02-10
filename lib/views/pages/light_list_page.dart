@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smart_home_control/models/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
+import 'package:smart_home_control/models/settings.dart';
 
 import 'package:smart_home_control/routes/routes.dart';
 import 'package:smart_home_control/views/components/light_list_item.dart';
@@ -14,6 +16,10 @@ class LightListPage extends StatefulWidget {
 }
 
 class _LightListPageState extends State<LightListPage> {
+  late String? broker;
+  late String? mqttId;
+  late int? port;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,5 +113,15 @@ class _LightListPageState extends State<LightListPage> {
             ],
           );
         });
+  }
+
+  Future loadServerSettingsFromDisk() async {
+    final preferences = await SharedPreferences.getInstance();
+
+    setState(() {
+      broker = preferences.getString(Settings.broker);
+      mqttId = preferences.getString(Settings.mqttId);
+      port = preferences.getInt(Settings.port);
+    });
   }
 }

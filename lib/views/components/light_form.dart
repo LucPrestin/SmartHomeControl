@@ -120,7 +120,7 @@ class _LightFormState extends State<LightForm> {
   Container colorPicker() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+      padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
       child: SlidePicker(
         key: const Key('field color'),
         onColorChanged: (Color value) => setState(() => color = value),

@@ -12,6 +12,7 @@ dependencies:
   flutter_colorpicker: ^1.0.3
   flutter:
     sdk: flutter
+  shared_preferences: ^2.0.13
   
   sqflite: ^2.0.1
 
