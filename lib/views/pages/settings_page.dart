@@ -21,18 +21,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-
-    loadCurrentPreferences();
-  }
-
-  Future loadCurrentPreferences() async {
-    final preferences = await SharedPreferences.getInstance();
-
-    setState(() {
-      broker = preferences.getString(Settings.broker);
-      mqttId = preferences.getString(Settings.mqttId);
-      port = preferences.getInt(Settings.port);
-    });
   }
 
   Future<bool> saveCurrentPreferences() async {
@@ -55,19 +43,56 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Form(
-              key: _formKey,
-              child: Column(children: [
-                brokerField(),
-                spacing(),
-                mqttIdField(),
-                spacing(),
-                portField()
-              ]))),
+          child: FutureBuilder<SharedPreferences>(
+              future: SharedPreferences.getInstance(),
+              builder: buildFormFromSnapshot)),
       drawer: const NavigationDrawer(),
       floatingActionButton: FloatingActionButton(
           onPressed: () => checkAndSubmit(), child: const Icon(Icons.check)),
     );
+  }
+
+  Widget buildFormFromSnapshot(context, snapshot) {
+    Widget body;
+    if (snapshot.hasData) {
+      SharedPreferences preferences = snapshot.data!;
+
+      broker = preferences.getString(Settings.broker);
+      mqttId = preferences.getString(Settings.mqttId);
+      port = preferences.getInt(Settings.port);
+
+      body = buildForm();
+    } else if (snapshot.hasError) {
+      body = Column(children: [
+        const Icon(Icons.error_outline),
+        Text(snapshot.error.toString())
+      ]);
+    } else {
+      body = Column(
+        children: const [
+          SizedBox(
+            width: 80,
+            height: 80,
+            child: CircularProgressIndicator(),
+          ),
+          Text('Waiting for stored preferences')
+        ],
+      );
+    }
+
+    return body;
+  }
+
+  Widget buildForm() {
+    return Form(
+        key: _formKey,
+        child: Column(children: [
+          brokerField(),
+          spacing(),
+          mqttIdField(),
+          spacing(),
+          portField()
+        ]));
   }
 
   SizedBox spacing() {
