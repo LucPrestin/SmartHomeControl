@@ -21,25 +21,23 @@ class _LightFormState extends State<LightForm> {
   final _formKey = GlobalKey<FormState>();
   late bool isEditForm;
 
-  late String name;
-  late String mqttId;
-  late Color color;
+  late String? name;
+  late String? mqttId;
+  late Color? color;
   late int? id;
-  late bool isOn;
 
   @override
   void initState() {
+    super.initState();
+
     isEditForm = widget.strip == null ? false : true;
 
-    name = widget.strip?.name ?? '';
-    mqttId = widget.strip?.mqttId ?? '';
-    color = widget.strip?.color ?? Colors.black;
+    name = widget.strip?.name;
+    mqttId = widget.strip?.mqttId;
+    color = widget.strip?.color;
     id = widget.strip?.id;
-    isOn = widget.strip?.isOn ?? false;
 
     streamSubscription = widget.submitTrigger?.listen((_) => checkAndSubmit());
-
-    super.initState();
   }
 
   @override
@@ -85,7 +83,7 @@ class _LightFormState extends State<LightForm> {
   TextFormField nameField() {
     return TextFormField(
         key: const Key('field name'),
-        onChanged: (String value) => setState(() => name = value),
+        onSaved: (String? value) => setState(() => name = value),
         initialValue: name,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -102,7 +100,7 @@ class _LightFormState extends State<LightForm> {
   TextFormField mqttIdField() {
     return TextFormField(
       key: const Key('field mqttId'),
-      onChanged: (String value) => setState(() => mqttId = value),
+      onSaved: (String? value) => setState(() => mqttId = value),
       initialValue: mqttId,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -124,7 +122,7 @@ class _LightFormState extends State<LightForm> {
       child: SlidePicker(
         key: const Key('field color'),
         onColorChanged: (Color value) => setState(() => color = value),
-        pickerColor: color,
+        pickerColor: color ?? Colors.black,
       ),
       decoration: BoxDecoration(
           border: Border.all(), borderRadius: BorderRadius.circular(4)),
@@ -133,14 +131,19 @@ class _LightFormState extends State<LightForm> {
 
   void checkAndSubmit() async {
     if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       if (isEditForm) {
-        widget.strip!.color = color;
-        widget.strip!.name = name;
-        widget.strip!.mqttId = mqttId;
+        widget.strip!.color = color ?? Colors.black;
+        widget.strip!.name = name ?? '';
+        widget.strip!.mqttId = mqttId ?? '';
         await DatabaseHelper.instance.updateLightStrip(widget.strip!);
       } else {
         await DatabaseHelper.instance.insertLightStrip(LightStrip(
-            id: id, name: name, mqttId: mqttId, color: color, isOn: isOn));
+            id: id,
+            name: name ?? '',
+            mqttId: mqttId ?? '',
+            color: color ?? Colors.black,
+            isOn: false));
       }
       Navigator.pop(context);
     }
