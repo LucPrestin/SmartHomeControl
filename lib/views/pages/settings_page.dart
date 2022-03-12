@@ -16,12 +16,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   String? broker;
   String? mqttId;
+  String? password;
   int? port;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   Future<bool> saveCurrentPreferences() async {
     const storage = FlutterSecureStorage();
@@ -29,6 +25,7 @@ class _SettingsPageState extends State<SettingsPage> {
     await Future.wait([
       storage.write(key: Settings.broker, value: broker!),
       storage.write(key: Settings.mqttId, value: mqttId!),
+      storage.write(key: Settings.password, value: password!),
       storage.write(key: Settings.port, value: port!.toString())
     ]);
 
@@ -59,6 +56,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
       broker = preferences[Settings.broker];
       mqttId = preferences[Settings.mqttId];
+      password = preferences[Settings.mqttId];
       String? portString = preferences[Settings.port];
       if (portString != null) {
         port = int.parse(portString);
@@ -94,6 +92,8 @@ class _SettingsPageState extends State<SettingsPage> {
           spacing(),
           mqttIdField(),
           spacing(),
+          passwordField(),
+          spacing(),
           portField()
         ]));
   }
@@ -105,7 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
   TextFormField brokerField() {
     return TextFormField(
         key: const Key('field broker'),
-        onChanged: (String value) => setState(() => broker = value),
+        onSaved: (String? value) => setState(() => broker = value),
         initialValue: broker,
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -116,13 +116,14 @@ class _SettingsPageState extends State<SettingsPage> {
         decoration: const InputDecoration(
             hintText: 'What is the ip-adress of your broker?',
             labelText: 'Broker *',
-            enabledBorder: OutlineInputBorder()));
+            enabledBorder: OutlineInputBorder(),
+            disabledBorder: OutlineInputBorder()));
   }
 
   TextFormField mqttIdField() {
     return TextFormField(
       key: const Key('field mqttId'),
-      onChanged: (String value) => setState(() => mqttId = value),
+      onSaved: (String? value) => setState(() => mqttId = value),
       initialValue: mqttId,
       validator: (value) {
         if (value == null || value.isEmpty) {
@@ -133,7 +134,28 @@ class _SettingsPageState extends State<SettingsPage> {
       decoration: const InputDecoration(
           hintText: 'How should your phone be called?',
           labelText: 'MQTT id *',
-          enabledBorder: OutlineInputBorder()),
+          enabledBorder: OutlineInputBorder(),
+          disabledBorder: OutlineInputBorder()),
+    );
+  }
+
+  TextFormField passwordField() {
+    return TextFormField(
+      key: const Key('field password'),
+      onSaved: (String? value) => setState(() => password = value),
+      initialValue: password,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter an ID';
+        }
+        return null;
+      },
+      obscureText: true,
+      decoration: const InputDecoration(
+          hintText: 'The password for this phone on the MQTT broker',
+          labelText: 'Password *',
+          enabledBorder: OutlineInputBorder(),
+          disabledBorder: OutlineInputBorder()),
     );
   }
 
@@ -141,8 +163,8 @@ class _SettingsPageState extends State<SettingsPage> {
     return TextFormField(
       key: const Key('field port'),
       keyboardType: TextInputType.number,
-      onChanged: (String value) => setState(() {
-        if (value.isNotEmpty) {
+      onSaved: (String? value) => setState(() {
+        if (value != null && value.isNotEmpty) {
           port = int.parse(value);
         }
       }),
@@ -156,12 +178,14 @@ class _SettingsPageState extends State<SettingsPage> {
       decoration: const InputDecoration(
           hintText: 'What port does your broker use?',
           labelText: 'Port *',
-          enabledBorder: OutlineInputBorder()),
+          enabledBorder: OutlineInputBorder(),
+          disabledBorder: OutlineInputBorder()),
     );
   }
 
   void checkAndSubmit() async {
     if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
       await saveCurrentPreferences();
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Preferences successfully updated')));
