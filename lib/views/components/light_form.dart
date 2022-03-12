@@ -4,21 +4,19 @@ import 'dart:async';
 
 import 'package:smart_home_control/models/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
+import 'package:smart_home_control/views/components/form_with_submit_trigger.dart';
 
-class LightForm extends StatefulWidget {
-  const LightForm({Key? key, this.strip, this.submitTrigger}) : super(key: key);
+class LightForm extends FormWithSubmitTrigger {
+  const LightForm({Key? key, this.strip, @required submitTrigger})
+      : super(key: key, submitTrigger: submitTrigger);
 
   final LightStrip? strip;
-  final Stream? submitTrigger;
 
   @override
   State<StatefulWidget> createState() => _LightFormState();
 }
 
-class _LightFormState extends State<LightForm> {
-  late StreamSubscription? streamSubscription;
-
-  final _formKey = GlobalKey<FormState>();
+class _LightFormState extends FormWithSubmitTriggerState<LightForm> {
   late bool isEditForm;
 
   late String? name;
@@ -36,26 +34,6 @@ class _LightFormState extends State<LightForm> {
     mqttId = widget.strip?.mqttId;
     color = widget.strip?.color;
     id = widget.strip?.id;
-
-    streamSubscription = widget.submitTrigger?.listen((_) => checkAndSubmit());
-  }
-
-  @override
-  didUpdateWidget(LightForm old) {
-    super.didUpdateWidget(old);
-
-    if (widget.submitTrigger != old.submitTrigger) {
-      streamSubscription?.cancel();
-      streamSubscription =
-          widget.submitTrigger?.listen((_) => checkAndSubmit());
-    }
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-
-    streamSubscription?.cancel();
   }
 
   @override
@@ -63,7 +41,7 @@ class _LightFormState extends State<LightForm> {
     return Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               children: [
                 nameField(),
@@ -129,23 +107,21 @@ class _LightFormState extends State<LightForm> {
     );
   }
 
-  void checkAndSubmit() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      if (isEditForm) {
-        widget.strip!.color = color ?? Colors.black;
-        widget.strip!.name = name ?? '';
-        widget.strip!.mqttId = mqttId ?? '';
-        await DatabaseHelper.instance.updateLightStrip(widget.strip!);
-      } else {
-        await DatabaseHelper.instance.insertLightStrip(LightStrip(
-            id: id,
-            name: name ?? '',
-            mqttId: mqttId ?? '',
-            color: color ?? Colors.black,
-            isOn: false));
-      }
-      Navigator.pop(context);
+  @override
+  Future<void> onSave() async {
+    if (isEditForm) {
+      widget.strip!.color = color ?? Colors.black;
+      widget.strip!.name = name ?? '';
+      widget.strip!.mqttId = mqttId ?? '';
+      await DatabaseHelper.instance.updateLightStrip(widget.strip!);
+    } else {
+      await DatabaseHelper.instance.insertLightStrip(LightStrip(
+          id: id,
+          name: name ?? '',
+          mqttId: mqttId ?? '',
+          color: color ?? Colors.black,
+          isOn: false));
     }
+    Navigator.pop(context);
   }
 }
