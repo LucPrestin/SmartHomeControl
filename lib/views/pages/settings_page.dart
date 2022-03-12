@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:smart_home_control/models/settings.dart';
 
 import 'package:smart_home_control/views/components/navigation_drawer.dart';
@@ -24,15 +24,15 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<bool> saveCurrentPreferences() async {
-    final preferences = await SharedPreferences.getInstance();
+    const storage = FlutterSecureStorage();
 
-    final successes = await Future.wait([
-      preferences.setString(Settings.broker, broker!),
-      preferences.setString(Settings.mqttId, mqttId!),
-      preferences.setInt(Settings.port, port!)
+    await Future.wait([
+      storage.write(key: Settings.broker, value: broker!),
+      storage.write(key: Settings.mqttId, value: mqttId!),
+      storage.write(key: Settings.port, value: port!.toString())
     ]);
 
-    return !successes.contains(false);
+    return true;
   }
 
   @override
@@ -43,8 +43,8 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: FutureBuilder<SharedPreferences>(
-              future: SharedPreferences.getInstance(),
+          child: FutureBuilder<Map<String, String>>(
+              future: (const FlutterSecureStorage()).readAll(),
               builder: buildFormFromSnapshot)),
       drawer: const NavigationDrawer(),
       floatingActionButton: FloatingActionButton(
@@ -55,11 +55,14 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget buildFormFromSnapshot(context, snapshot) {
     Widget body;
     if (snapshot.hasData) {
-      SharedPreferences preferences = snapshot.data!;
+      Map<String, String> preferences = snapshot.data!;
 
-      broker = preferences.getString(Settings.broker);
-      mqttId = preferences.getString(Settings.mqttId);
-      port = preferences.getInt(Settings.port);
+      broker = preferences[Settings.broker];
+      mqttId = preferences[Settings.mqttId];
+      String? portString = preferences[Settings.port];
+      if (portString != null) {
+        port = int.parse(portString);
+      }
 
       body = buildForm();
     } else if (snapshot.hasError) {
@@ -159,18 +162,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void checkAndSubmit() async {
     if (_formKey.currentState!.validate()) {
-      SnackBar snackBar;
-
-      if (await saveCurrentPreferences()) {
-        snackBar =
-            const SnackBar(content: Text('Preferences successfully updated'));
-      } else {
-        snackBar = const SnackBar(
-            content:
-                Text('Something went wrong when updating the preferences'));
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      await saveCurrentPreferences();
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Preferences successfully updated')));
     }
   }
 }

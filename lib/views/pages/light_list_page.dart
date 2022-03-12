@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:smart_home_control/models/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/models/settings.dart';
@@ -116,12 +116,16 @@ class _LightListPageState extends State<LightListPage> {
   }
 
   Future loadServerSettingsFromDisk() async {
-    final preferences = await SharedPreferences.getInstance();
+    Map<String, String> preferences =
+        await (const FlutterSecureStorage()).readAll();
 
     setState(() {
-      broker = preferences.getString(Settings.broker);
-      mqttId = preferences.getString(Settings.mqttId);
-      port = preferences.getInt(Settings.port);
+      broker = preferences[Settings.broker];
+      mqttId = preferences[Settings.mqttId];
+      String? portString = preferences[Settings.port];
+      if (portString != null) {
+        port = int.parse(portString);
+      }
     });
   }
 }
