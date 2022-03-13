@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:smart_home_control/helpers/database.dart';
+import 'package:smart_home_control/helpers/mqtt.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/routes/routes.dart';
 
@@ -29,7 +30,7 @@ class _LightListItemState extends State<LightListItem> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[names(), colorBox(), onOffToggle(), editButton()]);
+        children: <Widget>[names(), colorBox(), sendButton(), editButton()]);
   }
 
   Column names() {
@@ -69,14 +70,8 @@ class _LightListItemState extends State<LightListItem> {
                     borderRadius: BorderRadius.circular(4.0)))));
   }
 
-  Switch onOffToggle() {
-    return Switch(
-        onChanged: (value) async {
-          widget.strip.isOn = value;
-          await DatabaseHelper.instance.updateLightStrip(widget.strip);
-          setState(() {});
-        },
-        value: widget.strip.isOn);
+  TextButton sendButton() {
+    return TextButton(child: const Text('Send'), onPressed: sendStripColor);
   }
 
   IconButton editButton() {
@@ -117,4 +112,18 @@ class _LightListItemState extends State<LightListItem> {
           ],
         );
       });
+
+  Future<void> sendStripColor() async {
+    var helper = MQTTHelper.instance;
+    String message = '';
+
+    if (await helper.sendStripColor(widget.strip)) {
+      message = 'Color sent successfully';
+    } else {
+      message = 'An error occured while sending the color';
+    }
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
 }

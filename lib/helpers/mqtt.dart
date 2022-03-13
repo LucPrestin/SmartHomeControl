@@ -1,22 +1,26 @@
+import 'dart:io';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mqtt_client/mqtt_client.dart';
+import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/models/settings.dart';
 
 class MQTTHelper {
   MQTTHelper._privateContructor(
       {this.broker, this.mqttId, this.password, this.port});
-  static late final MQTTHelper instance = MQTTHelper._privateContructor();
+  static final MQTTHelper instance = MQTTHelper._privateContructor();
 
-  static MqttClient? _client;
-  Future<MqttClient?> get client async => _client ??= await _initializeClient();
+  static MqttServerClient? _client;
+  Future<MqttServerClient?> get client async =>
+      _client ??= await _initializeClient();
 
-  late final String? broker;
-  late final String? mqttId;
-  late final String? password;
-  late final int? port;
+  String? broker;
+  String? mqttId;
+  String? password;
+  int? port;
 
-  Future<MqttClient?> _initializeClient() async {
+  Future<MqttServerClient?> _initializeClient() async {
     Map<String, String> preferences =
         await const FlutterSecureStorage().readAll();
 
@@ -35,9 +39,9 @@ class MQTTHelper {
     return null;
   }
 
-  MqttClient _constructClient(
+  MqttServerClient _constructClient(
       String broker, String mqttId, String password, int port) {
-    MqttClient client = MqttClient.withPort(broker, mqttId, port);
+    MqttServerClient client = MqttServerClient.withPort(broker, mqttId, port);
 
     client.logging(on: false);
     client.setProtocolV311();
@@ -57,6 +61,8 @@ class MQTTHelper {
     try {
       await mClient.connect();
     } on NoConnectionException {
+      mClient.disconnect();
+    } on SocketException {
       mClient.disconnect();
     }
 
