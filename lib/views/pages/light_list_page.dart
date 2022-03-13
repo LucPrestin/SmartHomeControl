@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:smart_home_control/models/database.dart';
+import 'package:smart_home_control/helpers/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/models/settings.dart';
 
