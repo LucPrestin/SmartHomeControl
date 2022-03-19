@@ -30,7 +30,12 @@ class _LightListItemState extends State<LightListItem> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[names(), colorBox(), sendButton(), editButton()]);
+        children: <Widget>[
+          names(),
+          Row(
+            children: [colorBox(), sendButton(), editButton()],
+          )
+        ]);
   }
 
   Column names() {
@@ -57,7 +62,7 @@ class _LightListItemState extends State<LightListItem> {
           }
         },
         child: SizedBox(
-            width: 40,
+            width: 80,
             height: 40,
             child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -67,19 +72,20 @@ class _LightListItemState extends State<LightListItem> {
                     borderRadius: BorderRadius.circular(4.0)))));
   }
 
-  TextButton sendButton() {
-    return TextButton(child: const Text('Send'), onPressed: sendStripColor);
+  IconButton sendButton() {
+    return IconButton(
+        icon: const Icon(Icons.send),
+        iconSize: 28.0,
+        onPressed: sendStripColor);
   }
 
   IconButton editButton() {
     return IconButton(
-      icon: const Icon(Icons.edit),
-      onPressed: () => Navigator.pushNamed(context, Routes.lightsEdit,
-              arguments: widget.strip)
-          .then((_) => setState(() {})),
-      iconSize: 28.0,
-      color: const Color(0xFF9d9d9d),
-    );
+        icon: const Icon(Icons.edit),
+        onPressed: () => Navigator.pushNamed(context, Routes.lightsEdit,
+                arguments: widget.strip)
+            .then((_) => setState(() {})),
+        iconSize: 28.0);
   }
 
   Future<Color?> showColorPickerDialog() => showDialog(
