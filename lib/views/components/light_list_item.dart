@@ -40,12 +40,8 @@ class _LightListItemState extends State<LightListItem> {
         children: <Widget>[
           Text(
             widget.strip.name,
-            style: const TextStyle(color: Color(0xFF000000)),
           ),
-          Text(
-            widget.strip.mqttId,
-            style: const TextStyle(color: Color(0xFF9d9d9d)),
-          )
+          Text(widget.strip.mqttId, style: const TextStyle(color: Colors.grey)),
         ]);
   }
 
@@ -65,7 +61,8 @@ class _LightListItemState extends State<LightListItem> {
             child: DecoratedBox(
                 decoration: BoxDecoration(
                     color: widget.strip.color,
-                    border: Border.all(),
+                    border: Border.all(
+                        color: Theme.of(context).colorScheme.onSurface),
                     borderRadius: BorderRadius.circular(4.0)))));
   }
 
