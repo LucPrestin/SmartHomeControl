@@ -38,17 +38,23 @@ class _LightListItemState extends State<LightListItem> {
         ]);
   }
 
-  Column names() {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            widget.strip.name,
-          ),
-          Text(widget.strip.mqttId, style: const TextStyle(color: Colors.grey)),
-        ]);
+  Flexible names() {
+    return Flexible(
+        child: Container(
+            margin: const EdgeInsets.only(right: 16.0),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    widget.strip.name,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(widget.strip.mqttId,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.grey)),
+                ])));
   }
 
   GestureDetector colorBox() {
