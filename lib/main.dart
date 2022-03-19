@@ -20,23 +20,9 @@ class SmartHomeControlApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Smart Home Control',
-        theme: ThemeData(
-          colorScheme: ColorScheme(
-            primary: Colors.purple.shade400,
-            primaryVariant: Colors.purple.shade700,
-            secondary: Colors.cyan.shade400,
-            secondaryVariant: Colors.cyan.shade700,
-            error: const Color.fromRGBO(0xB0, 0x00, 0x20, 1),
-            surface: Colors.white,
-            background: Colors.white,
-            brightness: Brightness.light,
-            onPrimary: Colors.white,
-            onSecondary: Colors.black,
-            onError: Colors.white,
-            onSurface: Colors.black,
-            onBackground: Colors.black,
-          ),
-        ),
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode: ThemeMode.system,
         home: const LightListPage(),
         routes: {
           Routes.lights: (context) => const LightListPage(),
