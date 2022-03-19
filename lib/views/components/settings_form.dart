@@ -47,7 +47,7 @@ class _SettingsFormState extends FormWithSubmitTriggerState<SettingsForm> {
 
       broker = preferences[Settings.broker];
       mqttId = preferences[Settings.mqttId];
-      password = preferences[Settings.mqttId];
+      password = preferences[Settings.password];
       String? portString = preferences[Settings.port];
       if (portString != null) {
         port = int.parse(portString);

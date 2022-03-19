@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:smart_home_control/models/settings.dart';
 
 import 'package:smart_home_control/views/components/navigation_drawer.dart';
 import 'package:smart_home_control/views/components/settings_form.dart';

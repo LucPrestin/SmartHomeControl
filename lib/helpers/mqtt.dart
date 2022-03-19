@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -26,7 +27,7 @@ class MQTTHelper {
 
     broker = preferences[Settings.broker];
     mqttId = preferences[Settings.mqttId];
-    password = preferences[Settings.mqttId];
+    password = preferences[Settings.password];
     String? portString = preferences[Settings.port];
     if (portString != null) {
       port = int.parse(portString);
@@ -59,7 +60,7 @@ class MQTTHelper {
     if (mClient == null) return false;
 
     try {
-      await mClient.connect();
+      await mClient.connect(mqttId, password);
     } on NoConnectionException {
       mClient.disconnect();
     } on SocketException {
