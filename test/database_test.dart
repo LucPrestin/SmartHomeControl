@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smart_home_control/models/database.dart';
+import 'package:smart_home_control/helpers/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 
 import 'factories.dart';

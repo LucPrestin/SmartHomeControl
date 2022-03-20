@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:smart_home_control/models/database.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:smart_home_control/helpers/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
+import 'package:smart_home_control/models/settings.dart';
 
 import 'package:smart_home_control/routes/routes.dart';
 import 'package:smart_home_control/views/components/light_list_item.dart';
@@ -14,6 +16,10 @@ class LightListPage extends StatefulWidget {
 }
 
 class _LightListPageState extends State<LightListPage> {
+  late String? broker;
+  late String? mqttId;
+  late int? port;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,5 +113,19 @@ class _LightListPageState extends State<LightListPage> {
             ],
           );
         });
+  }
+
+  Future loadServerSettingsFromDisk() async {
+    Map<String, String> preferences =
+        await (const FlutterSecureStorage()).readAll();
+
+    setState(() {
+      broker = preferences[Settings.broker];
+      mqttId = preferences[Settings.mqttId];
+      String? portString = preferences[Settings.port];
+      if (portString != null) {
+        port = int.parse(portString);
+      }
+    });
   }
 }

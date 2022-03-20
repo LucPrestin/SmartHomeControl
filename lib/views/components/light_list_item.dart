@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:smart_home_control/models/database.dart';
+import 'package:smart_home_control/helpers/database.dart';
+import 'package:smart_home_control/helpers/mqtt.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/routes/routes.dart';
 
@@ -29,20 +30,31 @@ class _LightListItemState extends State<LightListItem> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[names(), colorBox(), onOffToggle(), editButton()]);
+        children: <Widget>[
+          names(),
+          Row(
+            children: [colorBox(), sendButton(), editButton()],
+          )
+        ]);
   }
 
-  Column names() {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            widget.strip.name,
-          ),
-          Text(widget.strip.mqttId, style: const TextStyle(color: Colors.grey)),
-        ]);
+  Flexible names() {
+    return Flexible(
+        child: Container(
+            margin: const EdgeInsets.only(right: 16.0),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    widget.strip.name,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(widget.strip.mqttId,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.grey)),
+                ])));
   }
 
   GestureDetector colorBox() {
@@ -56,7 +68,7 @@ class _LightListItemState extends State<LightListItem> {
           }
         },
         child: SizedBox(
-            width: 40,
+            width: 80,
             height: 40,
             child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -66,25 +78,20 @@ class _LightListItemState extends State<LightListItem> {
                     borderRadius: BorderRadius.circular(4.0)))));
   }
 
-  Switch onOffToggle() {
-    return Switch(
-        onChanged: (value) async {
-          widget.strip.isOn = value;
-          await DatabaseHelper.instance.updateLightStrip(widget.strip);
-          setState(() {});
-        },
-        value: widget.strip.isOn);
+  IconButton sendButton() {
+    return IconButton(
+        icon: const Icon(Icons.send),
+        iconSize: 28.0,
+        onPressed: sendStripColor);
   }
 
   IconButton editButton() {
     return IconButton(
-      icon: const Icon(Icons.edit),
-      onPressed: () => Navigator.pushNamed(context, Routes.lightsEdit,
-              arguments: widget.strip)
-          .then((_) => setState(() {})),
-      iconSize: 28.0,
-      color: const Color(0xFF9d9d9d),
-    );
+        icon: const Icon(Icons.edit),
+        onPressed: () => Navigator.pushNamed(context, Routes.lightsEdit,
+                arguments: widget.strip)
+            .then((_) => setState(() {})),
+        iconSize: 28.0);
   }
 
   Future<Color?> showColorPickerDialog() => showDialog(
@@ -114,4 +121,18 @@ class _LightListItemState extends State<LightListItem> {
           ],
         );
       });
+
+  Future<void> sendStripColor() async {
+    var helper = MQTTHelper.instance;
+    String message = '';
+
+    if (await helper.sendStripColor(widget.strip)) {
+      message = 'Color sent successfully';
+    } else {
+      message = 'An error occured while sending the color';
+    }
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
 }

@@ -39,6 +39,13 @@ class NavigationDrawer extends StatelessWidget {
               ),
               const Divider(),
               ListTile(
+                key: const Key('to SettingsPage'),
+                leading: const Icon(Icons.settings),
+                title: const Text('Settings'),
+                onTap: () =>
+                    Navigator.pushReplacementNamed(context, Routes.settings),
+              ),
+              ListTile(
                 key: const Key('to AboutPage'),
                 leading: const Icon(Icons.info),
                 title: const Text('About'),

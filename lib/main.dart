@@ -4,6 +4,7 @@ import 'package:smart_home_control/views/pages/light_edit_page.dart';
 
 import 'package:smart_home_control/views/pages/about_page.dart';
 import 'package:smart_home_control/views/pages/light_list_page.dart';
+import 'package:smart_home_control/views/pages/settings_page.dart';
 import 'package:smart_home_control/views/pages/smart_hub_list_page.dart';
 
 import 'routes/routes.dart';
@@ -28,6 +29,7 @@ class SmartHomeControlApp extends StatelessWidget {
           Routes.lightsNew: (context) => const LightAddPage(),
           Routes.lightsEdit: (context) => const LightEditPage(),
           Routes.smartHubs: (context) => const SmartHubListPage(),
+          Routes.settings: (context) => const SettingsPage(),
           Routes.about: (context) => const AboutPage(),
         });
   }
