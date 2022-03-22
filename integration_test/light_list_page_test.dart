@@ -4,24 +4,43 @@ import 'package:integration_test/integration_test.dart';
 
 import 'package:smart_home_control/main.dart' as app;
 import 'package:smart_home_control/views/components/navigation_drawer.dart';
+import 'package:smart_home_control/views/pages/light_add_page.dart';
+
+Future navigateToLightAddPage(WidgetTester tester) async {
+  await tester.pumpAndSettle();
+}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('opens navigation drawer on sandwich button tap',
-      (WidgetTester tester) async {
+  setUpAll(() {
     app.main();
-    await tester.pumpAndSettle();
+  });
 
-    Finder drawer = find
+  testWidgets(
+      'opens navigation drawer when pressing the sandwich button in the app bar',
+      (WidgetTester tester) async {
+    await navigateToLightAddPage(tester);
+
+    await tester.tap(find
         .descendant(
           of: find.byType(AppBar),
           matching: find.byType(IconButton),
         )
-        .first;
-    await tester.tap(drawer);
+        .first);
     await tester.pumpAndSettle();
 
     expect(find.byType(NavigationDrawer), findsOneWidget);
+  });
+
+  testWidgets(
+      'navigates to a LightAddPage when pressing the floating action button',
+      (WidgetTester tester) async {
+    await navigateToLightAddPage(tester);
+
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(LightAddPage), findsOneWidget);
   });
 }
