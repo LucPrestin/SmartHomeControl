@@ -9,7 +9,6 @@ import 'package:smart_home_control/views/pages/settings_page.dart';
 import 'package:smart_home_control/views/pages/smart_hub_list_page.dart';
 
 Future openNavigationDrawer(WidgetTester tester) async {
-  app.main();
   await tester.pumpAndSettle();
 
   await tester.tap(find
@@ -23,6 +22,10 @@ Future openNavigationDrawer(WidgetTester tester) async {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  setUpAll(() {
+    app.main();
+  });
 
   testWidgets('navigates to light list page', (WidgetTester tester) async {
     await openNavigationDrawer(tester);

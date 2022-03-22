@@ -6,7 +6,6 @@ import 'package:smart_home_control/main.dart' as app;
 import 'package:smart_home_control/views/components/navigation_drawer.dart';
 
 Future navigateToSmartHubListPage(WidgetTester tester) async {
-  app.main();
   await tester.pumpAndSettle();
 
   await tester.tap(find
@@ -24,9 +23,12 @@ Future navigateToSmartHubListPage(WidgetTester tester) async {
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  setUpAll(() {
+    app.main();
+  });
+
   testWidgets('opens navigation drawer on sandwich button tap',
       (WidgetTester tester) async {
-    app.main();
     await tester.pumpAndSettle();
 
     Finder drawer = find

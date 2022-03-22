@@ -24,18 +24,20 @@ Future navigateToSettingsPage(WidgetTester tester) async {
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  setUpAll(() {
+    app.main();
+  });
+
   testWidgets('opens navigation drawer on sandwich button tap',
       (WidgetTester tester) async {
-    app.main();
     await tester.pumpAndSettle();
 
-    Finder drawer = find
+    await tester.tap(find
         .descendant(
           of: find.byType(AppBar),
           matching: find.byType(IconButton),
         )
-        .first;
-    await tester.tap(drawer);
+        .first);
     await tester.pumpAndSettle();
 
     expect(find.byType(NavigationDrawer), findsOneWidget);

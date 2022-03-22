@@ -6,8 +6,12 @@ import 'package:smart_home_control/views/pages/light_list_page.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('starts to the light list page', (WidgetTester tester) async {
+
+  setUpAll(() {
     app.main();
+  });
+
+  testWidgets('starts to the light list page', (WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     expect(find.byType(LightListPage), findsOneWidget);
