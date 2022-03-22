@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:smart_home_control/models/light_strip.dart';
-import 'package:smart_home_control/views/components/light_form.dart';
+import 'package:smart_home_control/views/forms/light_form.dart';
 
 class LightEditPage extends StatefulWidget {
   const LightEditPage({Key? key}) : super(key: key);

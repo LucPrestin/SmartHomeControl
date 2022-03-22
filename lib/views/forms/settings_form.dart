@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:smart_home_control/models/settings.dart';
-import 'package:smart_home_control/views/components/form_with_submit_trigger.dart';
+import 'package:smart_home_control/views/forms/form_with_submit_trigger.dart';
 
 class SettingsForm extends FormWithSubmitTrigger {
   const SettingsForm({Key? key, @required submitTrigger})

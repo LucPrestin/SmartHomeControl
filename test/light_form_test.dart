@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:smart_home_control/main.dart';
-import 'package:smart_home_control/views/components/light_form.dart';
+import 'package:smart_home_control/views/forms/light_form.dart';
 
 void main() {
   group('child components', () {

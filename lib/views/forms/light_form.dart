@@ -4,7 +4,7 @@ import 'dart:async';
 
 import 'package:smart_home_control/helpers/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
-import 'package:smart_home_control/views/components/form_with_submit_trigger.dart';
+import 'package:smart_home_control/views/forms/form_with_submit_trigger.dart';
 
 class LightForm extends FormWithSubmitTrigger {
   const LightForm({Key? key, this.strip, @required submitTrigger})
