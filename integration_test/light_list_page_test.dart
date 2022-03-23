@@ -2,25 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:smart_home_control/main.dart' as app;
 import 'package:smart_home_control/views/components/navigation_drawer.dart';
 import 'package:smart_home_control/views/pages/light_add_page.dart';
 
-Future navigateToLightAddPage(WidgetTester tester) async {
-  await tester.pumpAndSettle();
-}
+import 'utils.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() {
-    app.main();
-  });
-
   testWidgets(
       'opens navigation drawer when pressing the sandwich button in the app bar',
       (WidgetTester tester) async {
-    await navigateToLightAddPage(tester);
+    await startApp(tester);
 
     await tester.tap(find
         .descendant(
@@ -36,7 +29,7 @@ void main() {
   testWidgets(
       'navigates to a LightAddPage when pressing the floating action button',
       (WidgetTester tester) async {
-    await navigateToLightAddPage(tester);
+    await startApp(tester);
 
     await tester.tap(find.byType(FloatingActionButton));
     await tester.pumpAndSettle();

@@ -1,27 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:integration_test/integration_test.dart';
-import 'package:smart_home_control/main.dart' as app;
+
 import 'package:smart_home_control/views/components/light_list_item.dart';
 import 'package:smart_home_control/views/pages/light_list_page.dart';
 
-Future navigateToLightAddPage(WidgetTester tester) async {
-  await tester.pumpAndSettle();
-
-  await tester.tap(find.byType(FloatingActionButton));
-  await tester.pumpAndSettle();
-}
+import 'utils.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() {
-    app.main();
-  });
-
   testWidgets(
       'Returns to the light list page when pressing the back button in the app bar',
       (WidgetTester tester) async {
+    await startApp(tester);
     await navigateToLightAddPage(tester);
 
     await tester.tap(find
@@ -35,63 +28,66 @@ void main() {
     expect(find.byType(LightListPage), findsOneWidget);
   });
 
-  group('form testing', () {
-    testWidgets('returns to light list page after successful addition',
-        (WidgetTester tester) async {
-      await navigateToLightAddPage(tester);
+  testWidgets('returns to light list page after successful addition',
+      (WidgetTester tester) async {
+    await startApp(tester);
+    await navigateToLightAddPage(tester);
 
-      await tester.enterText(find.byKey(const Key('field name')), 'Name');
-      await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('field name')), 'Name');
+    await tester.pumpAndSettle();
 
-      await tester.enterText(find.byKey(const Key('field mqttId')), 'mqttId');
-      await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('field mqttId')), 'mqttId');
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(FloatingActionButton));
-      await tester.pumpAndSettle();
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
 
-      expect(find.byType(LightListPage), findsOneWidget);
-    });
+    expect(find.byType(LightListPage), findsOneWidget);
+  });
 
-    testWidgets('light list page has one more entry after successful addition',
-        (WidgetTester tester) async {
-      int countBefore =
-          tester.widgetList<LightListItem>(find.byType(LightListItem)).length;
+  testWidgets('light list page has one more entry after successful addition',
+      (WidgetTester tester) async {
+    await startApp(tester);
 
-      await navigateToLightAddPage(tester);
+    int countBefore =
+        tester.widgetList<LightListItem>(find.byType(LightListItem)).length;
 
-      await tester.enterText(find.byKey(const Key('field name')), 'Name');
-      await tester.pumpAndSettle();
+    await navigateToLightAddPage(tester);
 
-      await tester.enterText(find.byKey(const Key('field mqttId')), 'mqttId');
-      await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('field name')), 'Name');
+    await tester.pumpAndSettle();
 
-      await tester.tap(find.byType(FloatingActionButton));
-      await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('field mqttId')), 'mqttId');
+    await tester.pumpAndSettle();
 
-      int countAfter =
-          tester.widgetList<LightListItem>(find.byType(LightListItem)).length;
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
 
-      expect(countAfter, countBefore + 1);
-    });
+    int countAfter =
+        tester.widgetList<LightListItem>(find.byType(LightListItem)).length;
 
-    testWidgets('shows error message when name field is empty',
-        (WidgetTester tester) async {
-      await navigateToLightAddPage(tester);
+    expect(countAfter, countBefore + 1);
+  });
 
-      await tester.tap(find.byType(FloatingActionButton));
-      await tester.pumpAndSettle();
+  testWidgets('shows error message when name field is empty',
+      (WidgetTester tester) async {
+    await startApp(tester);
+    await navigateToLightAddPage(tester);
 
-      expect(find.text('Please enter a name'), findsOneWidget);
-    });
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
 
-    testWidgets('shows error message when mqttId field is empty',
-        (WidgetTester tester) async {
-      await navigateToLightAddPage(tester);
+    expect(find.text('Please enter a name'), findsOneWidget);
+  });
 
-      await tester.tap(find.byType(FloatingActionButton));
-      await tester.pumpAndSettle();
+  testWidgets('shows error message when mqttId field is empty',
+      (WidgetTester tester) async {
+    await startApp(tester);
+    await navigateToLightAddPage(tester);
 
-      expect(find.text('Please enter an ID'), findsOneWidget);
-    });
+    await tester.tap(find.byType(FloatingActionButton));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Please enter an ID'), findsOneWidget);
   });
 }
