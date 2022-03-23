@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:smart_home_control/helpers/database.dart';
-import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/views/components/light_list_item.dart';
 
 import 'package:smart_home_control/views/components/navigation_drawer.dart';
@@ -43,21 +41,14 @@ void main() {
   });
 
   group('light list item', () {
+    const String stripName = 'name';
+
     setUpAll(() async {
-      var database = DatabaseHelper.instance;
-      await database
-          .insertLightStrip(LightStrip(name: 'name', mqttId: 'mqttId'));
+      await addLightStripToDatabase(stripName);
     });
 
     tearDownAll(() async {
-      var database = DatabaseHelper.instance;
-
-      var strips = await database.getAllLightStrips();
-      var futures = <Future>[];
-      for (var strip in strips) {
-        futures.add(database.removeLightStrip(strip));
-      }
-      await Future.wait(futures);
+      await clearDatabase();
     });
 
     group('color rectangle', () {
@@ -140,6 +131,65 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(LightEditPage), findsOneWidget);
+      });
+    });
+
+    group('item deletion', () {
+      testWidgets('swiping a light list item left opens a deletion dialog',
+          (WidgetTester tester) async {
+        await startApp(tester);
+
+        await tester.drag(find.byType(LightListItem).first,
+            Offset(tester.binding.window.physicalSize.width * -0.80, 0));
+        await tester.pumpAndSettle();
+
+        expect(
+            find.descendant(
+                of: find.byType(AlertDialog),
+                matching: find.text('Delete $stripName?')),
+            findsOneWidget);
+      });
+
+      testWidgets(
+          'pressing cancel in confirmation dialog closes it and nothing changed',
+          (WidgetTester tester) async {
+        await startApp(tester);
+
+        int countBefore =
+            tester.widgetList<LightListItem>(find.byType(LightListItem)).length;
+
+        await tester.drag(find.byType(LightListItem).first,
+            Offset(tester.binding.window.physicalSize.width * -0.80, 0));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Cancel'));
+        await tester.pumpAndSettle();
+
+        int countAfter =
+            tester.widgetList<LightListItem>(find.byType(LightListItem)).length;
+
+        expect(countAfter, countBefore);
+      });
+
+      testWidgets(
+          'pressing confirm in confirmation dialog closes it and the list items is gone',
+          (WidgetTester tester) async {
+        await startApp(tester);
+
+        int countBefore =
+            tester.widgetList<LightListItem>(find.byType(LightListItem)).length;
+
+        await tester.drag(find.byType(LightListItem).first,
+            Offset(tester.binding.window.physicalSize.width * -0.80, 0));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Confirm'));
+        await tester.pumpAndSettle();
+
+        int countAfter =
+            tester.widgetList<LightListItem>(find.byType(LightListItem)).length;
+
+        expect(countAfter, countBefore - 1);
       });
     });
   });

@@ -77,9 +77,10 @@ class _LightListPageState extends State<LightListPage> {
             confirmDismiss: (direction) =>
                 showDismissConfirmationDialog(direction, item.name),
             onDismissed: (direction) async {
-              strips.removeAt(index);
+              setState(() {
+                strips.removeAt(index);
+              });
               await DatabaseHelper.instance.removeLightStrip(item);
-              setState(() {});
             },
             background: Container(
               color: Colors.red,

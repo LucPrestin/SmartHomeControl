@@ -64,17 +64,17 @@ Future navigateToSmartHubListPage(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
-Future addLightStripToDatabase(WidgetTester tester) async {
-  await navigateToLightAddPage(tester);
+Future addLightStripToDatabase(String name) async {
+  var database = DatabaseHelper.instance;
+  await database.insertLightStrip(LightStrip(name: name));
+}
 
-  await tester.enterText(find.byKey(const Key('field name')), 'Name');
-  await tester.pumpAndSettle();
-
-  await tester.enterText(find.byKey(const Key('field mqttId')), 'mqttId');
-  await tester.pumpAndSettle();
-
-  await tester.tap(find.byType(FloatingActionButton));
-  await tester.pumpAndSettle();
-
-  await tester.pumpAndSettle();
+Future clearDatabase() async {
+  var database = DatabaseHelper.instance;
+  var strips = await database.getAllLightStrips();
+  var futures = <Future>[];
+  for (var strip in strips) {
+    futures.add(database.removeLightStrip(strip));
+  }
+  await Future.wait(futures);
 }
