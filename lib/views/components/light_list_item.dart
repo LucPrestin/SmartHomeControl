@@ -124,15 +124,11 @@ class _LightListItemState extends State<LightListItem> {
 
   Future<void> sendStripColor() async {
     var helper = MQTTHelper.instance;
-    String message = '';
 
-    if (await helper.sendStripColor(widget.strip)) {
-      message = 'Color sent successfully';
-    } else {
-      message = 'An error occured while sending the color';
-    }
+    String? message = await helper.sendStripColor(widget.strip);
+    message ??= 'Color sent successfully';
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message), duration: const Duration(seconds: 2)));
   }
 }

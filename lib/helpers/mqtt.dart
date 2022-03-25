@@ -59,22 +59,27 @@ class MQTTHelper {
     return client;
   }
 
-  Future<bool> sendStripColor(LightStrip strip) {
+  Future<String?> sendStripColor(LightStrip strip) {
     return sendMessage(strip.mqttId, strip.color.toString());
   }
 
-  Future<bool> sendMessage(String topic, String message) async {
+  Future<String?> sendMessage(String topic, String message) async {
     var mClient = await client;
 
-    bool result = false;
+    String? errorMessage;
 
-    if (mClient == null) return false;
+    if (mClient == null) {
+      return "Cannot start client. Check the broker adress and port.";
+    }
 
     try {
       await mClient.connect(mqttId, password);
     } on NoConnectionException {
+      errorMessage = "Cannot connect to broker. Check your name and password.";
       mClient.disconnect();
     } on SocketException {
+      // this should never trigger, as we don't use sockets, but just to be safe...
+      errorMessage = "Cannot create socket.";
       mClient.disconnect();
     }
 
@@ -82,11 +87,10 @@ class MQTTHelper {
       final builder = MqttClientPayloadBuilder();
       builder.addString(message);
       mClient.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!);
-      result = true;
     }
 
     mClient.disconnect();
-    return result;
+    return errorMessage;
   }
 
   Future<Map<String, bool>> sendMessages(Map<String, String> messages) async {
