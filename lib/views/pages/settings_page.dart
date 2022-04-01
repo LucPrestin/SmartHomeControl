@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:smart_home_control/views/components/navigation_drawer.dart';
-import 'package:smart_home_control/views/components/settings_form.dart';
+import 'package:smart_home_control/views/forms/settings_form.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);

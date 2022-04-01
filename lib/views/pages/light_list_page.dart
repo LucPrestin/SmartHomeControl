@@ -42,12 +42,14 @@ class _LightListPageState extends State<LightListPage> {
     if (snapshot.hasData) {
       body = buildLightStripList(snapshot.data!);
     } else if (snapshot.hasError) {
-      body = Column(children: [
+      body = Center(
+          child: Column(children: [
         const Icon(Icons.error_outline),
         Text(snapshot.error.toString())
-      ]);
+      ]));
     } else {
-      body = Column(
+      body = Center(
+          child: Column(
         children: const [
           SizedBox(
             width: 80,
@@ -56,7 +58,7 @@ class _LightListPageState extends State<LightListPage> {
           ),
           Text('Waiting for database to load the light strips')
         ],
-      );
+      ));
     }
 
     return body;
@@ -77,9 +79,10 @@ class _LightListPageState extends State<LightListPage> {
             confirmDismiss: (direction) =>
                 showDismissConfirmationDialog(direction, item.name),
             onDismissed: (direction) async {
-              strips.removeAt(index);
+              setState(() {
+                strips.removeAt(index);
+              });
               await DatabaseHelper.instance.removeLightStrip(item);
-              setState(() {});
             },
             background: Container(
               color: Colors.red,
