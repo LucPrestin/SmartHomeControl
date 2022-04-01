@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 
-import 'package:smart_home_control/views/components/navigation_drawer.dart';
+import 'package:smart_home_control/views/pages/page.dart';
 
-class AboutPage extends StatefulWidget {
+class AboutPage extends StatefulWidget implements TabPage {
   const AboutPage({Key? key}) : super(key: key);
 
   @override
   State<AboutPage> createState() => _AboutPageState();
+
+  @override
+  String get title => 'About';
+
+  @override
+  IconData? get floatingActionButtonIcon => null;
+
+  @override
+  Function()? get floatingActionButtonPressedCallback => null;
+
+  @override
+  IconData get navigationIcon => Icons.info;
 }
 
 class _AboutPageState extends State<AboutPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('About'),
-      ),
-      body: const Center(child: Text('Here goes some text about this app')),
-      drawer: const NavigationDrawer(),
-    );
+    return const Center(child: Text('Here goes some text about this app'));
   }
 }
