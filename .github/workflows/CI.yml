@@ -14,7 +14,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '2.0.1'
+          flutter-version: '2.10.3'
       - name: Install app dependencies
         run: flutter pub get
       - name: Run linter
@@ -28,7 +28,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v1.4.0
         with:
-          flutter-version: '2.0.1'
+          flutter-version: '2.10.3'
       - name: Install app dependencies
         run: flutter pub get
       - name: Run widget and unit tests
