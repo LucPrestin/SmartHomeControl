@@ -42,23 +42,24 @@ class _LightFormState extends FormWithSubmitTriggerState<LightForm> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
             key: formKey,
-            child: Column(
+            child: SingleChildScrollView(
+                child: Column(
               children: [
-                nameField(),
-                spacing(),
-                mqttIdField(),
-                spacing(),
-                colorPicker(),
-                spacing()
+                _nameField(),
+                _spacing(),
+                _mqttIdField(),
+                _spacing(),
+                _colorPicker(),
+                _spacing()
               ],
-            )));
+            ))));
   }
 
-  SizedBox spacing() {
+  SizedBox _spacing() {
     return const SizedBox(height: 20);
   }
 
-  TextFormField nameField() {
+  TextFormField _nameField() {
     return TextFormField(
         key: const Key('field name'),
         onSaved: (String? value) => setState(() => name = value),
@@ -75,7 +76,7 @@ class _LightFormState extends FormWithSubmitTriggerState<LightForm> {
             enabledBorder: OutlineInputBorder()));
   }
 
-  TextFormField mqttIdField() {
+  TextFormField _mqttIdField() {
     return TextFormField(
       key: const Key('field mqttId'),
       onSaved: (String? value) => setState(() => mqttId = value),
@@ -93,7 +94,7 @@ class _LightFormState extends FormWithSubmitTriggerState<LightForm> {
     );
   }
 
-  Container colorPicker() {
+  Container _colorPicker() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),

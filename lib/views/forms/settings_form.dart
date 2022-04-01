@@ -78,22 +78,23 @@ class _SettingsFormState extends FormWithSubmitTriggerState<SettingsForm> {
   Widget buildForm() {
     return Form(
         key: formKey,
-        child: Column(children: [
-          brokerField(),
-          spacing(),
-          mqttIdField(),
-          spacing(),
-          passwordField(),
-          spacing(),
-          portField()
-        ]));
+        child: SingleChildScrollView(
+            child: Column(children: [
+          _brokerField(),
+          _spacing(),
+          _mqttIdField(),
+          _spacing(),
+          _passwordField(),
+          _spacing(),
+          _portField()
+        ])));
   }
 
-  SizedBox spacing() {
+  SizedBox _spacing() {
     return const SizedBox(height: 20);
   }
 
-  TextFormField brokerField() {
+  TextFormField _brokerField() {
     return TextFormField(
         key: const Key('field broker'),
         onSaved: (String? value) => setState(() => broker = value),
@@ -111,7 +112,7 @@ class _SettingsFormState extends FormWithSubmitTriggerState<SettingsForm> {
             disabledBorder: OutlineInputBorder()));
   }
 
-  TextFormField mqttIdField() {
+  TextFormField _mqttIdField() {
     return TextFormField(
       key: const Key('field mqttId'),
       onSaved: (String? value) => setState(() => mqttId = value),
@@ -130,7 +131,7 @@ class _SettingsFormState extends FormWithSubmitTriggerState<SettingsForm> {
     );
   }
 
-  TextFormField passwordField() {
+  TextFormField _passwordField() {
     return TextFormField(
       key: const Key('field password'),
       onSaved: (String? value) => setState(() => password = value),
@@ -150,7 +151,7 @@ class _SettingsFormState extends FormWithSubmitTriggerState<SettingsForm> {
     );
   }
 
-  TextFormField portField() {
+  TextFormField _portField() {
     return TextFormField(
       key: const Key('field port'),
       keyboardType: TextInputType.number,
