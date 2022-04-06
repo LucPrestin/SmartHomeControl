@@ -140,7 +140,8 @@ void main() {
         await startApp(tester);
 
         await tester.drag(find.byType(LightListItem).first,
-            Offset(tester.binding.window.physicalSize.width * -0.80, 0));
+            Offset(tester.binding.window.physicalSize.width * -0.80, 0),
+            warnIfMissed: false);
         await tester.pumpAndSettle();
 
         expect(
@@ -159,7 +160,8 @@ void main() {
             tester.widgetList<LightListItem>(find.byType(LightListItem)).length;
 
         await tester.drag(find.byType(LightListItem).first,
-            Offset(tester.binding.window.physicalSize.width * -0.80, 0));
+            Offset(tester.binding.window.physicalSize.width * -0.80, 0),
+            warnIfMissed: false);
         await tester.pumpAndSettle();
 
         await tester.tap(find.text('Cancel'));
@@ -180,7 +182,8 @@ void main() {
             tester.widgetList<LightListItem>(find.byType(LightListItem)).length;
 
         await tester.drag(find.byType(LightListItem).first,
-            Offset(tester.binding.window.physicalSize.width * -0.80, 0));
+            Offset(tester.binding.window.physicalSize.width * -0.80, 0),
+            warnIfMissed: false);
         await tester.pumpAndSettle();
 
         await tester.tap(find.text('Confirm'));
