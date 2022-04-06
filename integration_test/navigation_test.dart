@@ -12,43 +12,46 @@ import 'utils.dart';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('navigates to light list page', (WidgetTester tester) async {
-    await startApp(tester);
-    await openNavigationDrawer(tester);
+  group('navigation drawer', () {
+    testWidgets('navigates to settings page', (WidgetTester tester) async {
+      await startApp(tester);
+      await openNavigationDrawer(tester);
 
-    await tester.tap(find.byKey(const Key('to LightListPage')));
-    await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('to SettingsPage')));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(LightListPage), findsOneWidget);
+      expect(find.byType(SettingsPage), findsOneWidget);
+    });
+
+    testWidgets('navigates to about page', (WidgetTester tester) async {
+      await startApp(tester);
+      await openNavigationDrawer(tester);
+
+      await tester.tap(find.byKey(const Key('to AboutPage')));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AboutPage), findsOneWidget);
+    });
   });
 
-  testWidgets('navigates to smart hub list page', (WidgetTester tester) async {
-    await startApp(tester);
-    await openNavigationDrawer(tester);
+  group('bottom navigation', () {
+    testWidgets('navigates to light list page', (WidgetTester tester) async {
+      await startApp(tester);
 
-    await tester.tap(find.byKey(const Key('to SmartHubListPage')));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text('Lights'));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(SmartHubListPage), findsOneWidget);
-  });
+      expect(find.byType(LightListPage), findsOneWidget);
+    });
 
-  testWidgets('navigates to settings page', (WidgetTester tester) async {
-    await startApp(tester);
-    await openNavigationDrawer(tester);
+    testWidgets('navigates to smart hub list page',
+        (WidgetTester tester) async {
+      await startApp(tester);
 
-    await tester.tap(find.byKey(const Key('to SettingsPage')));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text('Smart Hubs'));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(SettingsPage), findsOneWidget);
-  });
-
-  testWidgets('navigates to about page', (WidgetTester tester) async {
-    await startApp(tester);
-    await openNavigationDrawer(tester);
-
-    await tester.tap(find.byKey(const Key('to AboutPage')));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(AboutPage), findsOneWidget);
+      expect(find.byType(SmartHubListPage), findsOneWidget);
+    });
   });
 }

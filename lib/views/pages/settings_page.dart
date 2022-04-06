@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:smart_home_control/views/components/navigation_drawer.dart';
 import 'package:smart_home_control/views/forms/settings_form.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -19,15 +18,14 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: const Text('Settings'),
       ),
-      body: SettingsForm(
-        submitTrigger: submitTrigger.stream,
-      ),
-      drawer: const NavigationDrawer(),
+      body: SettingsForm(submitTrigger: submitTrigger.stream),
       floatingActionButton: FloatingActionButton(
-          onPressed: () => submitTrigger.sink.add(null),
-          child: const Icon(Icons.check)),
+        onPressed: () => submitTrigger.sink.add(null),
+        child: const Icon(Icons.check),
+      ),
     );
   }
 }

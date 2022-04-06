@@ -6,13 +6,22 @@ import 'package:smart_home_control/models/settings.dart';
 
 import 'package:smart_home_control/routes/routes.dart';
 import 'package:smart_home_control/views/components/light_list_item.dart';
-import 'package:smart_home_control/views/components/navigation_drawer.dart';
+import 'package:smart_home_control/interfaces/tab_page.dart';
 
-class LightListPage extends StatefulWidget {
+class LightListPage extends StatefulWidget implements TabPage {
   const LightListPage({Key? key}) : super(key: key);
 
   @override
   State<LightListPage> createState() => _LightListPageState();
+
+  @override
+  String get title => 'Lights';
+
+  @override
+  IconData get tabBarIcon => Icons.lightbulb;
+
+  @override
+  String get tabBarText => 'Lights';
 }
 
 class _LightListPageState extends State<LightListPage> {
@@ -23,13 +32,9 @@ class _LightListPageState extends State<LightListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Lights'),
-        ),
         body: FutureBuilder<List<LightStrip>>(
             future: DatabaseHelper.instance.getAllLightStrips(),
             builder: buildLightStripListFromSnapshot),
-        drawer: const NavigationDrawer(),
         floatingActionButton: FloatingActionButton(
           onPressed: () => Navigator.pushNamed(context, Routes.lightsNew)
               .then((_) => setState(() {})),

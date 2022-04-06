@@ -52,12 +52,7 @@ Future navigateToSettingsPage(WidgetTester tester) async {
 }
 
 Future navigateToSmartHubListPage(WidgetTester tester) async {
-  await tester.tap(find
-      .descendant(
-        of: find.byType(AppBar),
-        matching: find.byType(IconButton),
-      )
-      .first);
+  await tester.tap(find.text('Smart Hubs'));
   await tester.pumpAndSettle();
 
   await tester.tap(find.byKey(const Key('to SmartHubListPage')));
