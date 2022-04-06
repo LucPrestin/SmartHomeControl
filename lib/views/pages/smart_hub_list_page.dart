@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:smart_home_control/views/pages/page.dart';
+import 'package:smart_home_control/interfaces/tab_page.dart';
 
 class SmartHubListPage extends StatefulWidget implements TabPage {
   const SmartHubListPage({Key? key}) : super(key: key);
@@ -12,13 +12,10 @@ class SmartHubListPage extends StatefulWidget implements TabPage {
   String get title => 'Smart Hubs';
 
   @override
-  IconData? get floatingActionButtonIcon => null;
+  IconData get tabBarIcon => Icons.device_hub;
 
   @override
-  Function()? get floatingActionButtonPressedCallback => null;
-
-  @override
-  IconData get navigationIcon => Icons.device_hub;
+  String get tabBarText => 'Smart Hubs';
 }
 
 class _SmartHubListPageState extends State<SmartHubListPage> {
