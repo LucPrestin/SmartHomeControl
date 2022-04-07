@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:smart_home_control/views/components/navigation_drawer.dart';
+
 import 'package:smart_home_control/views/pages/light_add_page.dart';
 import 'package:smart_home_control/views/pages/light_edit_page.dart';
-
 import 'package:smart_home_control/views/pages/about_page.dart';
 import 'package:smart_home_control/views/pages/light_list_page.dart';
 import 'package:smart_home_control/views/pages/settings_page.dart';
 import 'package:smart_home_control/views/pages/smart_hub_list_page.dart';
+import 'package:smart_home_control/views/components/navigation_drawer.dart';
+import 'package:smart_home_control/views/themes.dart';
+
 import 'package:smart_home_control/interfaces/tab_page.dart';
 
 import 'routes/routes.dart';
@@ -34,7 +36,6 @@ class _SmartHomeControlAppState extends State<SmartHomeControlApp>
   @override
   void initState() {
     super.initState();
-
     _tabController = TabController(length: _widgetOptions.length, vsync: this);
   }
 
@@ -48,8 +49,8 @@ class _SmartHomeControlAppState extends State<SmartHomeControlApp>
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Smart Home Control',
-        theme: ThemeData.light(),
-        darkTheme: ThemeData.dark(),
+        theme: lightTheme,
+        darkTheme: darkTheme,
         themeMode: ThemeMode.system,
         home: Scaffold(
             appBar: AppBar(
@@ -58,15 +59,10 @@ class _SmartHomeControlAppState extends State<SmartHomeControlApp>
             ),
             body: TabBarView(
               controller: _tabController,
-              children: _widgetOptions.map((e) => Container(child: e)).toList(),
+              children: _widgetOptions,
             ),
             drawer: const NavigationDrawer(),
-            bottomNavigationBar: BottomAppBar(
-              child: SizedBox(
-                height: 50,
-                child: _buildTabBar(),
-              ),
-            )),
+            bottomNavigationBar: _buildBottomNavigationBar()),
         routes: {
           Routes.lightsNew: (context) => const LightAddPage(),
           Routes.lightsEdit: (context) => const LightEditPage(),
@@ -75,17 +71,24 @@ class _SmartHomeControlAppState extends State<SmartHomeControlApp>
         });
   }
 
-  TabBar _buildTabBar() {
-    return TabBar(
-        controller: _tabController,
-        tabs: _widgetOptions
-            .map((e) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon((e as TabPage).tabBarIcon),
-                    Text((e as TabPage).tabBarText)
-                  ],
-                ))
-            .toList());
+  BottomAppBar _buildBottomNavigationBar() {
+    return BottomAppBar(
+        child: SizedBox(
+            height: 50,
+            child: IconTheme(
+              data:
+                  IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
+              child: TabBar(
+                  indicatorColor: Theme.of(context).colorScheme.secondary,
+                  controller: _tabController,
+                  tabs: _widgetOptions
+                      .map((e) => Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon((e as TabPage).tabBarIcon),
+                                Text((e as TabPage).tabBarText)
+                              ]))
+                      .toList()),
+            )));
   }
 }

@@ -12,12 +12,10 @@ class NavigationDrawer extends StatelessWidget {
       padding: EdgeInsets.zero,
       children: [
         DrawerHeader(
-            decoration:
-                BoxDecoration(color: Theme.of(context).colorScheme.secondary),
             child: Text('Smart Home Control',
                 style: TextStyle(
                     fontSize: 24,
-                    color: Theme.of(context).colorScheme.onSecondary))),
+                    color: Theme.of(context).colorScheme.onSurface))),
         ListTile(
           key: const Key('to SettingsPage'),
           leading: const Icon(Icons.settings),
