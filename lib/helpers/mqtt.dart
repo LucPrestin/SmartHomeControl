@@ -3,14 +3,16 @@ import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:smart_home_control/constants.dart';
 import 'package:smart_home_control/helpers/utils.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/models/settings.dart';
+import 'package:typed_data/typed_buffers.dart';
 
 class MQTTHelper {
-  MQTTHelper._privateContructor(
+  MQTTHelper._privateConstructor(
       {this.broker, this.mqttId, this.password, this.port});
-  static final MQTTHelper instance = MQTTHelper._privateContructor();
+  static final MQTTHelper instance = MQTTHelper._privateConstructor();
 
   static MqttServerClient? _client;
   Future<MqttServerClient?> get client async =>
@@ -60,16 +62,18 @@ class MQTTHelper {
   }
 
   Future<String?> sendStripColor(LightStrip strip) {
-    return sendMessage(strip.mqttId, strip.color.toString());
+    final builder = MqttClientPayloadBuilder();
+    builder.addInt(strip.color.value);
+    return sendPayload(strip.mqttId + colorSuffix, builder.payload!);
   }
 
-  Future<String?> sendMessage(String topic, String message) async {
+  Future<String?> sendPayload(String topic, Uint8Buffer payload) async {
     var mClient = await client;
 
     String? errorMessage;
 
     if (mClient == null) {
-      return "Cannot start client. Check the broker adress and port.";
+      return "Cannot start client. Check the broker address and port.";
     }
 
     try {
@@ -84,9 +88,7 @@ class MQTTHelper {
     }
 
     if (mClient.connectionStatus!.state == MqttConnectionState.connected) {
-      final builder = MqttClientPayloadBuilder();
-      builder.addString(message);
-      mClient.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!);
+      mClient.publishMessage(topic, MqttQos.atLeastOnce, payload);
     }
 
     mClient.disconnect();
