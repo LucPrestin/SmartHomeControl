@@ -3,74 +3,58 @@ import 'dart:io';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
-import 'package:smart_home_control/helpers/utils.dart';
+import 'package:smart_home_control/constants.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 import 'package:smart_home_control/models/settings.dart';
+import 'package:typed_data/typed_buffers.dart';
 
 class MQTTHelper {
-  MQTTHelper._privateContructor(
-      {this.broker, this.mqttId, this.password, this.port});
-  static final MQTTHelper instance = MQTTHelper._privateContructor();
+  MQTTHelper._privateConstructor();
+  static final MQTTHelper instance = MQTTHelper._privateConstructor();
 
-  static MqttServerClient? _client;
-  Future<MqttServerClient?> get client async =>
-      _client ??= await _initializeClient();
-
-  String? broker;
-  String? mqttId;
-  String? password;
-  int? port;
-
-  Future<MqttServerClient?> _initializeClient() async {
+  Future<MqttServerClient?> get client async {
     Map<String, String> preferences =
         await const FlutterSecureStorage().readAll();
 
-    broker = preferences[Settings.broker];
-    mqttId = preferences[Settings.mqttId];
-    password = preferences[Settings.password];
+    String? broker = preferences[Settings.broker];
+    String? mqttId = preferences[Settings.mqttId];
     String? portString = preferences[Settings.port];
+    int? port;
     if (portString != null) {
       port = int.parse(portString);
     }
-    String? deviceName = await getDeviceName();
-    String name;
-    if (deviceName != null) {
-      name = deviceName;
-    } else {
-      name = "smart_home_control";
-    }
 
-    if (broker != null && password != null && port != null) {
-      return _constructClient(broker!, name, password!, port!);
+    if (broker != null && mqttId != null && port != null) {
+      MqttServerClient client = MqttServerClient.withPort(broker, mqttId, port);
+
+      client.logging(on: false);
+      client.setProtocolV311();
+      client.keepAlivePeriod = 20;
+
+      return client;
     }
 
     return null;
   }
 
-  MqttServerClient _constructClient(
-      String broker, String deviceName, String password, int port) {
-    MqttServerClient client =
-        MqttServerClient.withPort(broker, deviceName, port);
-
-    client.logging(on: false);
-    client.setProtocolV311();
-    client.keepAlivePeriod = 20;
-
-    return client;
-  }
-
   Future<String?> sendStripColor(LightStrip strip) {
-    return sendMessage(strip.mqttId, strip.color.toString());
+    final builder = MqttClientPayloadBuilder();
+    builder.addInt(strip.color.value);
+    return sendPayload(strip.mqttId + colorSuffix, builder.payload!);
   }
 
-  Future<String?> sendMessage(String topic, String message) async {
+  Future<String?> sendPayload(String topic, Uint8Buffer payload) async {
     var mClient = await client;
 
-    String? errorMessage;
-
     if (mClient == null) {
-      return "Cannot start client. Check the broker adress and port.";
+      return "Cannot start client. Check the broker address and port.";
     }
+
+    var storage = const FlutterSecureStorage();
+    String? mqttId = await storage.read(key: Settings.mqttId);
+    String? password = await storage.read(key: Settings.password);
+
+    String? errorMessage;
 
     try {
       await mClient.connect(mqttId, password);
@@ -84,16 +68,24 @@ class MQTTHelper {
     }
 
     if (mClient.connectionStatus!.state == MqttConnectionState.connected) {
-      final builder = MqttClientPayloadBuilder();
-      builder.addString(message);
-      mClient.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!);
+      mClient.publishMessage(topic, MqttQos.atLeastOnce, payload);
     }
 
     mClient.disconnect();
     return errorMessage;
   }
 
-  Future<Map<String, bool>> sendMessages(Map<String, String> messages) async {
+  Future<Map<String, bool>> sendStripColors(List<LightStrip> strips) async {
+    var payloads = <String, Uint8Buffer>{};
+    for (var strip in strips) {
+      payloads[strip.mqttId] =
+          MqttClientPayloadBuilder().addInt(strip.color.value).payload!;
+    }
+    return sendPayloads(payloads);
+  }
+
+  Future<Map<String, bool>> sendPayloads(
+      Map<String, Uint8Buffer> messages) async {
     var mClient = await client;
 
     var results = <String, bool>{};
@@ -103,6 +95,10 @@ class MQTTHelper {
 
     if (mClient == null) return results;
 
+    var storage = const FlutterSecureStorage();
+    String? mqttId = await storage.read(key: Settings.mqttId);
+    String? password = await storage.read(key: Settings.password);
+
     try {
       await mClient.connect(mqttId, password);
     } on NoConnectionException {
@@ -111,11 +107,9 @@ class MQTTHelper {
       mClient.disconnect();
     }
 
-    messages.forEach((topic, message) {
+    messages.forEach((topic, payload) {
       if (mClient.connectionStatus!.state == MqttConnectionState.connected) {
-        final builder = MqttClientPayloadBuilder();
-        builder.addString(message);
-        mClient.publishMessage(topic, MqttQos.atLeastOnce, builder.payload!);
+        mClient.publishMessage(topic, MqttQos.atLeastOnce, payload);
         results[topic] = true;
       }
     });
