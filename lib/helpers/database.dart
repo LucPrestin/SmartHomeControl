@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import 'package:smart_home_control/database/database.dart';
 import 'package:smart_home_control/models/light_strip.dart';
 import 'package:sqflite/sqflite.dart';
@@ -13,6 +15,22 @@ class DatabaseHelper {
 
   insertLightStrip(LightStrip lightStrip) async {
     await _insertElement(LightStrip.tableName, lightStrip.toMap());
+    await insertSubtopics(lightStrip.id, lightStrip.subtopics);
+  }
+
+  insertSubtopics(int? lightStripId, Map<String, Color> subtopics) async {
+    List<Map<String, dynamic>> entries = [];
+
+    subtopics.forEach((subtopic, color) {
+      entries.add({
+        "id": null,
+        "light_strip_id": lightStripId,
+        "subtopic": subtopic,
+        "color": color.value
+      });
+    });
+
+    await _insertElements('subtopics', entries);
   }
 
   Future<LightStrip> getLightStrip(int id) async {
@@ -49,6 +67,14 @@ class DatabaseHelper {
     Database db = await database;
     return await db.delete(_tableNameLightStrip,
         where: 'id = ?', whereArgs: [lightStrip.id]);
+  }
+
+  Future _insertElements(
+      String tableName, List<Map<String, Object?>> values) async {
+    Database db = await database;
+
+    return Future.wait(values
+        .map((Map<String, Object?> value) => db.insert(tableName, value)));
   }
 
   Future _insertElement(String tableName, Map<String, Object?> values) async {

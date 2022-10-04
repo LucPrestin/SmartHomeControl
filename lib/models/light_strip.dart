@@ -34,8 +34,7 @@ class LightStrip {
       "color": color.value,
       "name": name,
       "mqttTopic": mqttTopic,
-      "isOn": isOn ? 1 : 0,
-      "subtopics": subtopics
+      "isOn": isOn ? 1 : 0
     };
   }
 }
