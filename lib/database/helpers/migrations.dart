@@ -41,16 +41,16 @@ class CreateTableMigration extends Migration {
     }
 
     String tableName = migrationMap['tableName'];
-    List<CreateTableField> fields = [];
+    List<Field> fields = [];
     for (var fieldMap in migrationMap['fields']) {
-      fields.add(CreateTableField.fromMap(fieldMap));
+      fields.add(Field.fromMap(fieldMap));
     }
 
     return CreateTableMigration(tableName: tableName, fields: fields);
   }
 
   String tableName = '';
-  List<CreateTableField> fields = [];
+  List<Field> fields = [];
 
   CreateTableMigration({required this.tableName, required this.fields});
 
@@ -58,7 +58,7 @@ class CreateTableMigration extends Migration {
   String sqlCommand() {
     String command = 'CREATE TABLE $tableName (';
 
-    for (CreateTableField field in fields) {
+    for (Field field in fields) {
       command += field.sqlCommand();
       command += ', ';
     }
@@ -140,19 +140,20 @@ class RenameColumnMigration extends Migration {
     return RenameColumnMigration(
         tableName: migrationMap['tableName'],
         oldColumnName: migrationMap['oldColumnName'],
-        newColumnName: migrationMap['newColumnName']
-    );
+        newColumnName: migrationMap['newColumnName']);
   }
 
   String tableName;
   String oldColumnName;
   String newColumnName;
 
-  RenameColumnMigration({required this.tableName, required this.oldColumnName, required this.newColumnName});
+  RenameColumnMigration(
+      {required this.tableName,
+      required this.oldColumnName,
+      required this.newColumnName});
 
   @override
   String sqlCommand() {
     return 'ALTER TABLE $tableName RENAME COLUMN $oldColumnName TO $newColumnName';
   }
-
 }
