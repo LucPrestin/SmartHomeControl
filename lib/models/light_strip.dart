@@ -8,13 +8,15 @@ class LightStrip {
   String name;
   String mqttTopic;
   bool isOn;
+  late Map<String, Color> subtopics;
 
   LightStrip(
       {this.id,
+      required this.color,
       required this.name,
-      this.mqttTopic = '',
-      this.color = Colors.black,
-      this.isOn = false});
+      required this.mqttTopic,
+      required this.isOn,
+      required this.subtopics});
 
   static fromMap(Map<String, dynamic> map) {
     return LightStrip(
@@ -22,7 +24,8 @@ class LightStrip {
         name: map['name'],
         mqttTopic: map['mqttTopic'],
         color: Color(map['color']),
-        isOn: map['isOn'] == 1);
+        isOn: map['isOn'] == 1,
+        subtopics: map['subtopics']);
   }
 
   Map<String, dynamic> toMap() {
@@ -31,7 +34,8 @@ class LightStrip {
       "color": color.value,
       "name": name,
       "mqttTopic": mqttTopic,
-      "isOn": isOn ? 1 : 0
+      "isOn": isOn ? 1 : 0,
+      "subtopics": subtopics
     };
   }
 }
