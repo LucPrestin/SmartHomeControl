@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LightStrip {
+  static const tableName = 'light_strip';
+
   int? id;
   Color color;
   String name;
