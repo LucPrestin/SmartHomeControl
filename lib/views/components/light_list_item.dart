@@ -51,7 +51,7 @@ class _LightListItemState extends State<LightListItem> {
                     widget.strip.name,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Text(widget.strip.mqttId,
+                  Text(widget.strip.mqttTopic,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(color: Colors.grey)),
                 ])));

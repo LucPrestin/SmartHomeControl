@@ -40,7 +40,7 @@ class MQTTHelper {
   Future<String?> sendStripColor(LightStrip strip) {
     final builder = MqttClientPayloadBuilder();
     builder.addInt(strip.color.value);
-    return sendPayload(strip.mqttId + colorSuffix, builder.payload!);
+    return sendPayload(strip.mqttTopic + colorSuffix, builder.payload!);
   }
 
   Future<String?> sendPayload(String topic, Uint8Buffer payload) async {
@@ -78,7 +78,7 @@ class MQTTHelper {
   Future<Map<String, bool>> sendStripColors(List<LightStrip> strips) async {
     var payloads = <String, Uint8Buffer>{};
     for (var strip in strips) {
-      payloads[strip.mqttId] =
+      payloads[strip.mqttTopic] =
           MqttClientPayloadBuilder().addInt(strip.color.value).payload!;
     }
     return sendPayloads(payloads);

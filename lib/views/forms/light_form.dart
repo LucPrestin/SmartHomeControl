@@ -20,7 +20,7 @@ class _LightFormState extends FormWithSubmitTriggerState<LightForm> {
   late bool isEditForm;
 
   late String? name;
-  late String? mqttId;
+  late String? mqttTopic;
   late Color? color;
   late int? id;
 
@@ -31,7 +31,7 @@ class _LightFormState extends FormWithSubmitTriggerState<LightForm> {
     isEditForm = widget.strip == null ? false : true;
 
     name = widget.strip?.name;
-    mqttId = widget.strip?.mqttId;
+    mqttTopic = widget.strip?.mqttTopic;
     color = widget.strip?.color;
     id = widget.strip?.id;
   }
@@ -79,8 +79,8 @@ class _LightFormState extends FormWithSubmitTriggerState<LightForm> {
   TextFormField _mqttIdField() {
     return TextFormField(
       key: const Key('field mqttId'),
-      onSaved: (String? value) => setState(() => mqttId = value),
-      initialValue: mqttId,
+      onSaved: (String? value) => setState(() => mqttTopic = value),
+      initialValue: mqttTopic,
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Please enter an ID';
@@ -113,13 +113,13 @@ class _LightFormState extends FormWithSubmitTriggerState<LightForm> {
     if (isEditForm) {
       widget.strip!.color = color ?? Colors.black;
       widget.strip!.name = name ?? '';
-      widget.strip!.mqttId = mqttId ?? '';
+      widget.strip!.mqttTopic = mqttTopic ?? '';
       await DatabaseHelper.instance.updateLightStrip(widget.strip!);
     } else {
       await DatabaseHelper.instance.insertLightStrip(LightStrip(
           id: id,
           name: name ?? '',
-          mqttId: mqttId ?? '',
+          mqttTopic: mqttTopic ?? '',
           color: color ?? Colors.black,
           isOn: false));
     }

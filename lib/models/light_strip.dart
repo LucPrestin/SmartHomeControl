@@ -6,13 +6,13 @@ class LightStrip {
   int? id;
   Color color;
   String name;
-  String mqttId;
+  String mqttTopic;
   bool isOn;
 
   LightStrip(
       {this.id,
       required this.name,
-      this.mqttId = '',
+      this.mqttTopic = '',
       this.color = Colors.black,
       this.isOn = false});
 
@@ -20,7 +20,7 @@ class LightStrip {
     return LightStrip(
         id: map['id'],
         name: map['name'],
-        mqttId: map['mqttId'],
+        mqttTopic: map['mqttTopic'],
         color: Color(map['color']),
         isOn: map['isOn'] == 1);
   }
@@ -30,7 +30,7 @@ class LightStrip {
       "id": id,
       "color": color.value,
       "name": name,
-      "mqttId": mqttId,
+      "mqttTopic": mqttTopic,
       "isOn": isOn ? 1 : 0
     };
   }

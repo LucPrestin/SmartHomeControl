@@ -15,5 +15,11 @@ const migrations = [
       {'type': FieldType.integer, 'name': 'color', 'flags': []},
       {'type': FieldType.integer, 'name': 'isOn', 'flags': []}
     ]
+  },
+  {
+    'action': MigrationType.renameColumn,
+    'tableName': 'light_strip',
+    'oldColumnName': 'mqttId',
+    'newColumnName': 'mqttTopic'
   }
 ];
