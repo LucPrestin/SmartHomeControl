@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:smart_home_control/views/components/navigation_drawer.dart';
 import 'package:smart_home_control/views/forms/settings_form.dart';
-import 'package:smart_home_control/views/pages/page.dart';
+import 'package:smart_home_control/views/pages/tab_page.dart';
 
 class SettingsPage extends StatefulWidget implements TabPage {
   const SettingsPage({Key? key}) : super(key: key);

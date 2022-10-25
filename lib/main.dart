@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:smart_home_control/views/pages/light_add_page.dart';
 import 'package:smart_home_control/views/pages/light_edit_page.dart';
 
-import 'package:smart_home_control/views/pages/page.dart';
+import 'package:smart_home_control/views/pages/tab_page.dart';
 import 'package:smart_home_control/views/pages/about_page.dart';
 import 'package:smart_home_control/views/pages/light_list_page.dart';
 import 'package:smart_home_control/views/pages/settings_page.dart';

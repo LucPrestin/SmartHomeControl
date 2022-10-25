@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:smart_home_control/views/pages/page.dart';
+import 'package:smart_home_control/views/pages/tab_page.dart';
 
 class SmartHubListPage extends StatefulWidget implements TabPage {
   const SmartHubListPage({Key? key}) : super(key: key);
